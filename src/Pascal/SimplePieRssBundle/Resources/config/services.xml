@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<parameters>
+		<parameter key="simplepie.file">%kernel.root_dir%/../vendor/simplepie/SimplePie.compiled.php</parameter>
+		<parameter key="simplepie.class">SimplePie</parameter>
+	</parameters>
+
+	<services>
+
+		<service id="simplepie.rss" class="%simplepie.class%" scope="prototype">
+			<file>%simplepie.file%</file>
+		</service>
+
+	</services>
+</container>

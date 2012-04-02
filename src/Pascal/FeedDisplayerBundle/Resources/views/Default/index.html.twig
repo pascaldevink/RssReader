@@ -1,0 +1,19 @@
+{% extends 'PascalFeedDisplayerBundle::layout.html.twig' %}
+
+{% block content %}
+<div>
+	Displaying entries {{ startNumber }} - {{ endNumber }} of {{ numberOfEntries }}
+</div>
+{% include 'PascalFeedDisplayerBundle:Default:pagination.html.twig' with {'page': page, 'numberOfPages' : numberOfPages } %}
+
+{% for entry in entries %}
+	<div>
+		<h1><a href="{{ entry.url }}">{{ entry.title }}</a></h1>
+		{% autoescape false %}
+		{{ entry.description }}
+		{% endautoescape %}
+	</div>
+{% endfor %}
+
+{% include 'PascalFeedDisplayerBundle:Default:pagination.html.twig' with {'page': page, 'numberOfPages' : numberOfPages } %}
+{% endblock %}

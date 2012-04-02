@@ -1,0 +1,45 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}
+Rss Reader
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{ asset('bundles/pascalfeeddisplayer/css/doc.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/pascalfeeddisplayer/css/bootstrap.min.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+	<script type="text/javascript" src="{{ asset('bundles/pascalfeeddisplayer/js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('bundles/pascalfeeddisplayer/js/bootstrap.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="#">
+				Project name
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row-fluid">
+		<div class="span3">
+			{% block sidebar %}
+			<div class="well sidebar-nav">
+
+			</div>
+			{% endblock %}
+		</div>
+		<div class="span9">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+</div>
+{% endblock %}
