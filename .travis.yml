@@ -3,4 +3,4 @@ php:
   - 5.3
 
 before_script:
-  - phpunit
+  - phpunit -c app
