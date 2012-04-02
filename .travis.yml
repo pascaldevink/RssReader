@@ -2,5 +2,7 @@ language: php
 php:
   - 5.3
 
-before_script:
-  - phpunit -c app
+script: phpunit -c app
+
+notifications:
+  irc: "irc.tweakers.net#rssreader"
