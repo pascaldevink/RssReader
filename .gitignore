@@ -1,0 +1,6 @@
+.idea/
+deps
+deps.lock
+
+app/cache
+app/logs

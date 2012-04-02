@@ -2,6 +2,9 @@
 
 namespace Pascal\FeedGathererBundle\Service;
 
+/**
+ * @author Pascal de Vink
+ */
 class FeedDownloaderService
 {
 	/**
@@ -14,7 +17,10 @@ class FeedDownloaderService
 		$this->feedServices = array();
 	}
 
-	public function downloadFeeds($lastUpdateTime)
+	/**
+	 * @param \DateTime $lastUpdateTime
+	 */
+	public function downloadFeeds(\DateTime $lastUpdateTime)
 	{
 		foreach($this->feedServices as $feedHandler)
 		{
@@ -22,6 +28,9 @@ class FeedDownloaderService
 		}
 	}
 
+	/**
+	 * @param $feedService
+	 */
 	public function addFeedService($feedService)
 	{
 		$this->feedServices[] = $feedService;
