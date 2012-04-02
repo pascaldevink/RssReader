@@ -9,20 +9,19 @@ class RssFeedService implements FeedService
 	/**
 	 * @var \Doctrine\ORM\EntityManager
 	 */
-	private $entityManager;
+	protected $entityManager;
 
 	/**
 	 * @var \SimplePie
 	 */
-	private $rssReader;
+	protected $rssReader;
 
 	public function __construct(\Symfony\Bundle\DoctrineBundle\Registry $doctrine, \SimplePie $rssReader, $cacheDir)
 	{
 		$this->entityManager = $doctrine->getEntityManager();
 		$this->rssReader = $rssReader;
 
-		if (!is_dir($cacheDir . DIRECTORY_SEPARATOR . 'rss'))
-			mkdir($cacheDir . DIRECTORY_SEPARATOR . 'rss');
+		$this->checkCacheDir($cacheDir);
 
 		$this->rssReader->set_cache_location($cacheDir);
 	}
@@ -35,15 +34,34 @@ class RssFeedService implements FeedService
 		$feeds = $this->getFeeds();
 		foreach ($feeds as $feed)
 		{
-			var_dump("Processing '".$feed->getTitle()."' feed");
-			$this->rssReader->set_feed_url($feed->getUrl());
-			$this->rssReader->init();
-
-			$items = $this->rssReader->get_items();
+//			var_dump("Processing '".$feed->getTitle()."' feed");
+			$items = $this->getEntriesFromFeed($feed);
 			$this->processItems($items, $feed, $lastUpdateTime);
 		}
 
 		$this->entityManager->flush();
+	}
+
+	/**
+	 * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
+	 * @return \SimplePie_Item[]
+	 */
+	protected function getEntriesFromFeed(Feed $feed)
+	{
+		$this->rssReader->set_feed_url($feed->getUrl());
+		$this->rssReader->init();
+
+		$items = $this->rssReader->get_items();
+		return $items;
+	}
+
+	/**
+	 * @param string $cacheDir
+	 */
+	protected function checkCacheDir($cacheDir)
+	{
+		if (!is_dir($cacheDir . DIRECTORY_SEPARATOR . 'rss'))
+			mkdir($cacheDir . DIRECTORY_SEPARATOR . 'rss');
 	}
 
 	/**
