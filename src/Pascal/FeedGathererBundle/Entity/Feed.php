@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Pascal\FeedGathererBundle\Entity\FeedRepository")
  */
-class Feed
+class Feed implements \Serializable
 {
     /**
      * @var integer $id
@@ -143,4 +143,39 @@ class Feed
     {
         return $this->disabled;
     }
+
+	/**
+	 * (PHP 5 &gt;= 5.1.0)<br/>
+	 * String representation of object
+	 * @link http://php.net/manual/en/serializable.serialize.php
+	 * @return string the string representation of the object or &null;
+	 */
+	public function serialize()
+	{
+		return serialize(array(
+			$this->id,
+			$this->disabled,
+			$this->title,
+			$this->url
+		));
+	}
+
+	/**
+	 * (PHP 5 &gt;= 5.1.0)<br/>
+	 * Constructs the object
+	 * @link http://php.net/manual/en/serializable.unserialize.php
+	 * @param string $serialized <p>
+	 * The string representation of the object.
+	 * </p>
+	 * @return mixed the original value unserialized.
+	 */
+	public function unserialize($serialized)
+	{
+		list(
+			$this->id,
+			$this->disabled,
+			$this->title,
+			$this->url
+			) = unserialize($serialized);
+	}
 }
