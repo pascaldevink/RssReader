@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<parameters>
+		<parameter key="twitter.file">%kernel.root_dir%/../vendor/tmhoauth/tmhOAuth.php</parameter>
+		<parameter key="twitter.class">tmhOAuth</parameter>
+	</parameters>
+
+	<services>
+
+		<service id="twitter.rss" class="%twitter.class%" scope="prototype">
+			<file>%twitter.file%</file>
+		</service>
+
+	</services>
+</container>

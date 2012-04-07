@@ -2,13 +2,13 @@
 
 namespace Pascal\FeedDisplayerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use \Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use \Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
     
-    public function indexAction($page = 1)
+    public function indexAction(Request $request, $page = 1)
     {
 		$feedEntryService = $this->getFeedEntryService();
 

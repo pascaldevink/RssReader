@@ -2,6 +2,10 @@ PascalFeedDisplayerBundle:
     resource: "@PascalFeedDisplayerBundle/Resources/config/routing.xml"
     prefix:   /
 
+PascalFeedGathererBundle:
+    resource: "@PascalFeedGathererBundle/Resources/config/routing.xml"
+    prefix:   /backend
+
 # Internal routing configuration to handle ESI
 #_internal:
 #   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"

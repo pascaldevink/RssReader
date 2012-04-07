@@ -21,6 +21,7 @@ class AppKernel extends Kernel
 			new Pascal\FeedGathererBundle\PascalFeedGathererBundle(),
             new Pascal\FeedDisplayerBundle\PascalFeedDisplayerBundle(),
             new Pascal\SimplePieRssBundle\PascalSimplePieRssBundle(),
+            new Pascal\TwitterOAuthBundle\PascalTwitterOAuthBundle(),
 		);
 
 		if (in_array($this->getEnvironment(), array('dev', 'test')))
