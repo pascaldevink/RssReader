@@ -3,6 +3,7 @@
 namespace Pascal\FeedGathererBundle\Service;
 
 use \Pascal\FeedGathererBundle\Entity\Feed;
+use \Pascal\FeedGathererBundle\Entity\RssFeed;
 
 class RssFeedService implements FeedService
 {
@@ -26,27 +27,26 @@ class RssFeedService implements FeedService
 		$this->rssReader->set_cache_location($cacheDir);
 	}
 
-	/**
-	 * @param \DateTime $lastUpdateTime
-	 */
-	public function downloadFeed(\DateTime $lastUpdateTime)
+	public function getServiceType()
 	{
-		$feeds = $this->getFeeds();
-		foreach ($feeds as $feed)
-		{
-//			var_dump("Processing '".$feed->getTitle()."' feed");
-			$items = $this->getEntriesFromFeed($feed);
-			$this->processItems($items, $feed, $lastUpdateTime);
-		}
-
-		$this->entityManager->flush();
+		return 'rss';
 	}
 
 	/**
-	 * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
+	 * @param \DateTime $lastUpdateTime
+	 */
+	public function downloadFeed(\Pascal\FeedGathererBundle\Entity\Feed $feed, \DateTime $lastUpdateTime)
+	{
+		$rssFeed = $this->getRssFeed($feed);
+		$items = $this->getEntriesFromFeed($rssFeed);
+		$this->processItems($items, $feed, $rssFeed, $lastUpdateTime);
+	}
+
+	/**
+	 * @param \Pascal\FeedGathererBundle\Entity\RssFeed $feed
 	 * @return \SimplePie_Item[]
 	 */
-	protected function getEntriesFromFeed(Feed $feed)
+	protected function getEntriesFromFeed(RssFeed $feed)
 	{
 		$this->rssReader->set_feed_url($feed->getUrl());
 		$this->rssReader->init();
@@ -65,15 +65,15 @@ class RssFeedService implements FeedService
 	}
 
 	/**
-	 * @return \Pascal\FeedGathererBundle\Entity\Feed[]
+	 * @return \Pascal\FeedGathererBundle\Entity\RssFeed
 	 */
-	protected function getFeeds()
+	protected function getRssFeed(Feed $feed)
 	{
 		$query = $this->entityManager
-			->createQuery("SELECT f FROM PascalFeedGathererBundle:Feed f WHERE f.disabled = :disabled")
-			->setParameter('disabled', 0);
+			->createQuery("SELECT r FROM PascalFeedGathererBundle:RssFeed r WHERE r.id=:id")
+			->setParameter("id", $feed->getTypeId());
 
-		$feeds = $query->getResult();
+		$feeds = $query->getSingleResult();
 		return $feeds;
 	}
 
@@ -82,7 +82,7 @@ class RssFeedService implements FeedService
 	 * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
 	 * @param \DateTime $lastUpdateTime
 	 */
-	protected function processItems($items, Feed $feed, \DateTime $lastUpdateTime)
+	protected function processItems($items, Feed $feed, RssFeed $rssFeed, \DateTime $lastUpdateTime)
 	{
 		foreach ($items as $item)
 		{
@@ -94,7 +94,7 @@ class RssFeedService implements FeedService
 			$feedEntry = new \Pascal\FeedGathererBundle\Entity\FeedEntry();
 			$feedEntry->setTitle($item->get_title());
 			$feedEntry->setDescription($item->get_description());
-			$feedEntry->setAuthor($this->getAuthor($item, $feed));
+			$feedEntry->setAuthor($this->getAuthor($item, $rssFeed));
 			$feedEntry->setUrl($item->get_link());
 			$feedEntry->setLastUpdateTime($dateTime);
 			$feedEntry->setFeed($feed);
@@ -105,9 +105,9 @@ class RssFeedService implements FeedService
 
 	/**
 	 * @param \SimplePie_Item $item
-	 * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
+	 * @param \Pascal\FeedGathererBundle\Entity\RssFeed $feed
 	 */
-	protected function getAuthor(\SimplePie_Item $item, Feed $feed)
+	protected function getAuthor(\SimplePie_Item $item, RssFeed $feed)
 	{
 		$authorName = '';
 		if ($item->get_author() == null)

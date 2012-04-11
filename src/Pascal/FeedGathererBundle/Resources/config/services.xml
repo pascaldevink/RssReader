@@ -17,6 +17,7 @@
 		</service>
 
 		<service id="feedDownloader" class="Pascal\FeedGathererBundle\Service\FeedDownloaderService">
+			<argument type="service" id="doctrine" strict="false" />
 			<call method="addFeedService">
 				<argument type="service" id="feedService.rss"/>
 			</call>

@@ -28,36 +28,47 @@ class TwitterFeedService implements FeedService
 		$this->twitter = $twitter;
 	}
 
-	public function downloadFeed(\DateTime $lastUpdateTime)
+	public function getServiceType()
+	{
+		return 'twitter';
+	}
+
+	public function downloadFeed(\Pascal\FeedGathererBundle\Entity\Feed $feed, \DateTime $lastUpdateTime)
 	{
 		$twitter = $this->getTwitter();
-		$twitterUsers = $this->getTwitterUsers();
+		$twitterUser = $this->getTwitterUser($feed);
 
-		foreach($twitterUsers as $twitterUser)
+		$twitter->setConfigValue('user_token', $twitterUser->getOauthToken());
+		$twitter->setConfigValue('user_secret', $twitterUser->getOauthTokenSecret());
+
+		$code = $twitter->request('GET', $twitter->url('1/statuses/home_timeline'), array(
+			'include_entities' => true
+		));
+
+		$response = $twitter->getResponse();
+		if ($code == 200)
 		{
-			$twitter->setConfigValue('user_token', $twitterUser->getOauthToken());
-			$twitter->setConfigValue('user_secret', $twitterUser->getOauthTokenSecret());
-
-			$code = $twitter->request('GET', $twitter->url('1/statuses/home_timeline'), array(
-				'include_entities' => true
-			));
-
-			$response = $twitter->getResponse();
-			if ($code == 200)
-			{
-				$timeline = json_decode($response['response'], true);
-				$this->processItems($timeline, $twitterUser, $lastUpdateTime);
-			}
+			$timeline = json_decode($response['response'], true);
+			$this->processItems($timeline, $twitterUser, $lastUpdateTime);
 		}
 	}
 
 	/**
 	 * @return \Pascal\FeedGathererBundle\Entity\TwitterUser[]
 	 */
-	protected function getTwitterUsers()
+	protected function getTwitterUser(\Pascal\FeedGathererBundle\Entity\Feed $feed)
 	{
-		$twitterUsers = $this->entityManager->getRepository('PascalFeedGathererBundle:TwitterUser')->findAll();
-		return $twitterUsers;
+		$dql = "
+			SELECT t
+			FROM PascalFeedGathererBundle:TwitterUser t
+			WHERE t.id=:id";
+
+		$query = $this->entityManager
+			->createQuery($dql)
+			->setParameter("id", $feed->getTypeId());
+
+		$twitterUser = $query->getSingleResult();
+		return $twitterUser;
 	}
 
 	/**

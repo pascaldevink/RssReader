@@ -12,28 +12,35 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Feed implements \Serializable
 {
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+	/**
+	 * @var integer $id
+	 *
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
 
-    /**
-     * @var string $title
-     *
-     * @ORM\Column(name="title", type="string", length=255)
-     */
-    private $title;
+	/**
+	 * @var string $type
+	 *
+	 * @ORM\Column(name="type", type="string", length=255)
+	 */
+	private $type;
 
-    /**
-     * @var string $url
-     *
-     * @ORM\Column(name="url", type="string", length=255)
-     */
-    private $url;
+	/**
+	 * @var integer $type
+	 *
+	 * @ORM\Column(name="typeId", type="integer")
+	 */
+	private $typeId;
+
+	/**
+	 * @var \DateTime $disabled
+	 *
+	 * @ORM\Column(name="lastUpdateTime", type="datetime")
+	 */
+	private $lastUpdateTime;
 
 	/**
 	 * @var boolean $disabled
@@ -54,95 +61,107 @@ class Feed implements \Serializable
 		$this->entries = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+	/**
+	 * Get id
+	 *
+	 * @return integer
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
 
-    /**
-     * Set title
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
+	/**
+	 * Set url
+	 *
+	 * @param string $url
+	 */
+	public function setType($url)
+	{
+		$this->type = $url;
+	}
 
-    /**
-     * Get title
-     *
-     * @return string 
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
+	/**
+	 * Get url
+	 *
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
 
-    /**
-     * Set url
-     *
-     * @param string $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
+	/**
+	 * Add entries
+	 *
+	 * @param Pascal\FeedGathererBundle\Entity\FeedEntry $entries
+	 */
+	public function addFeedEntry(\Pascal\FeedGathererBundle\Entity\FeedEntry $entries)
+	{
+		$this->entries[] = $entries;
+	}
 
-    /**
-     * Get url
-     *
-     * @return string 
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-    
-    /**
-     * Add entries
-     *
-     * @param Pascal\FeedGathererBundle\Entity\FeedEntry $entries
-     */
-    public function addFeedEntry(\Pascal\FeedGathererBundle\Entity\FeedEntry $entries)
-    {
-        $this->entries[] = $entries;
-    }
+	/**
+	 * Get entries
+	 *
+	 * @return Doctrine\Common\Collections\Collection
+	 */
+	public function getEntries()
+	{
+		return $this->entries;
+	}
 
-    /**
-     * Get entries
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getEntries()
-    {
-        return $this->entries;
-    }
+	/**
+	 * Set disabled
+	 *
+	 * @param boolean $disabled
+	 */
+	public function setDisabled($disabled)
+	{
+		$this->disabled = $disabled;
+	}
 
-    /**
-     * Set disabled
-     *
-     * @param boolean $disabled
-     */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = $disabled;
-    }
+	/**
+	 * Get disabled
+	 *
+	 * @return boolean
+	 */
+	public function getDisabled()
+	{
+		return $this->disabled;
+	}
 
-    /**
-     * Get disabled
-     *
-     * @return boolean 
-     */
-    public function getDisabled()
-    {
-        return $this->disabled;
-    }
+	/**
+	 * @param int $typeId
+	 */
+	public function setTypeId($typeId)
+	{
+		$this->typeId = $typeId;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getTypeId()
+	{
+		return $this->typeId;
+	}
+
+	/**
+	 * @param \DateTime $lastUpdateTime
+	 */
+	public function setLastUpdateTime($lastUpdateTime)
+	{
+		$this->lastUpdateTime = $lastUpdateTime;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getLastUpdateTime()
+	{
+		return $this->lastUpdateTime;
+	}
 
 	/**
 	 * (PHP 5 &gt;= 5.1.0)<br/>
@@ -155,8 +174,9 @@ class Feed implements \Serializable
 		return serialize(array(
 			$this->id,
 			$this->disabled,
-			$this->title,
-			$this->url
+			$this->type,
+			$this->typeId,
+			$this->lastUpdateTime,
 		));
 	}
 
@@ -174,8 +194,9 @@ class Feed implements \Serializable
 		list(
 			$this->id,
 			$this->disabled,
-			$this->title,
-			$this->url
+			$this->type,
+			$this->typeId,
+			$this->lastUpdateTime,
 			) = unserialize($serialized);
 	}
 }
