@@ -17,3 +17,7 @@
 
 {% include 'PascalFeedDisplayerBundle:Default:pagination.html.twig' with {'page': page, 'numberOfPages' : numberOfPages } %}
 {% endblock %}
+
+{% block sidebar %}
+	{% include 'PascalFeedDisplayerBundle:Default:sidebar.html.twig' with {'currentPage': 'inbox'} %}
+{% endblock %}

@@ -9,6 +9,7 @@ Rss Reader
 
 	<link rel="stylesheet" href="{{ asset('bundles/pascalfeeddisplayer/css/doc.css') }}" />
 	<link rel="stylesheet" href="{{ asset('bundles/pascalfeeddisplayer/css/bootstrap.min.css') }}" />
+	<link rel="stylesheet" href="{{ asset('bundles/pascalfeeddisplayer/css/bootstrap-responsive.min.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -31,11 +32,10 @@ Rss Reader
 <div class="container">
 	<div class="row-fluid">
 		<div class="span3">
+			<div class="well sidebar-nav visible-desktop">
 			{% block sidebar %}
-			<div class="well sidebar-nav">
-
-			</div>
 			{% endblock %}
+			</div>
 		</div>
 		<div class="span9">
 			{% block content %}{% endblock %}

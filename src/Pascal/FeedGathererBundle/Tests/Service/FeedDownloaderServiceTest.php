@@ -11,7 +11,7 @@ class FeedDownloaderServiceTest extends \PHPUnit_Framework_TestCase
 	public function testDownloadFeeds()
 	{
 		$this->markTestSkipped('Skipped untill further notice');
-		
+
 		$mockFeedService = new MockFeedService();
 
 		$feedDownloader = new FeedDownloaderService(new \Pascal\FeedGathererBundle\Tests\Mock\MockDoctrine());
