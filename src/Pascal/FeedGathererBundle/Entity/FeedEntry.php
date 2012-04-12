@@ -64,6 +64,18 @@ class FeedEntry implements \Serializable
 	 */
 	private $feed;
 
+	/**
+	 * @var \Pascal\FeedDisplayerBundle\Entity\Tag[]
+	 *
+	 * @ORM\ManyToMany(targetEntity="\Pascal\FeedDisplayerBundle\Entity\Tag", mappedBy="feedEntries")
+	 */
+	private $tags;
+
+	public function __construct()
+	{
+		$this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+
     /**
      * Get id
      *
@@ -195,6 +207,22 @@ class FeedEntry implements \Serializable
     }
 
 	/**
+	 * @param array $tags
+	 */
+	public function setTags($tags)
+	{
+		$this->tags = $tags;
+	}
+
+	/**
+	 * @return \Pascal\FeedDisplayerBundle\Entity\Tag[]
+	 */
+	public function getTags()
+	{
+		return $this->tags;
+	}
+
+	/**
 	 * (PHP 5 &gt;= 5.1.0)<br/>
 	 * String representation of object
 	 * @link http://php.net/manual/en/serializable.serialize.php
@@ -209,7 +237,8 @@ class FeedEntry implements \Serializable
 			$this->feed,
 			$this->lastUpdateTime,
 			$this->title,
-			$this->url
+			$this->url,
+			$this->tags,
 		));
 
 		return $serialized;
@@ -233,7 +262,8 @@ class FeedEntry implements \Serializable
 			$this->feed,
 			$this->lastUpdateTime,
 			$this->title,
-			$this->url
+			$this->url,
+			$this->tags,
 			) = unserialize($serialized);
 	}
 }

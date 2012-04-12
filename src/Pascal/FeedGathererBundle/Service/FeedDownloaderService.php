@@ -13,14 +13,14 @@ class FeedDownloaderService
 	protected $entityManager;
 
 	/**
-	 * @var FeedService[]
+	 * @var FeedHandlerService
 	 */
-	private $feedServices;
+	private $feedHandlerService;
 
-	public function __construct(\Symfony\Bundle\DoctrineBundle\Registry $doctrine)
+	public function __construct(\Symfony\Bundle\DoctrineBundle\Registry $doctrine, FeedHandlerService $feedHandlerService)
 	{
 		$this->entityManager = $doctrine->getEntityManager();
-		$this->feedServices = array();
+		$this->feedHandlerService = $feedHandlerService;
 	}
 
 	/**
@@ -29,9 +29,11 @@ class FeedDownloaderService
 	public function downloadFeeds(\DateTime $lastUpdateTime)
 	{
 		$feeds = $this->getFeeds($lastUpdateTime);
+		$feedServices = $this->feedHandlerService->getFeedHandlers();
+
 		foreach($feeds as $feed)
 		{
-			foreach($this->feedServices as $feedHandler)
+			foreach($feedServices as $feedHandler)
 			{
 				if ($feedHandler->getServiceType() == $feed->getType())
 				{
@@ -65,13 +67,5 @@ class FeedDownloaderService
 
 		$feeds = $query->getResult();
 		return $feeds;
-	}
-
-	/**
-	 * @param $feedService
-	 */
-	public function addFeedService($feedService)
-	{
-		$this->feedServices[] = $feedService;
 	}
 }

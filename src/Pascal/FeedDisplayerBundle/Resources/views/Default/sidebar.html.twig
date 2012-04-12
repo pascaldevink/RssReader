@@ -10,16 +10,19 @@
 		<i class="icon-th-list"></i>
 		Sources
 	</li>
-	<li><a href="">Rss feed entries</a></li>
-	<li><a href="">Twitter entries</a></li>
+	{% for feedType in feedTypes %}
+		<li>
+			<a href="">{{ feedType }}</a>
+		</li>
+	{% endfor%}
 
 	<li class="nav-header">
 		<i class="icon-tags"></i>
 		Tags
 	</li>
-	<li><a href="">javascript</a></li>
-	<li><a href="">php</a></li>
-	<li><a href="">scala</a></li>
-	<li><a href="">java</a></li>
-	<li><a href="">groovy</a></li>
+	{% for tag in tags %}
+		<li>
+			<a href="">{{ tag.name }}</a>
+		</li>
+	{% endfor%}
 </ul>

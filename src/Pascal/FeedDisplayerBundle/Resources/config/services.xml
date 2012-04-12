@@ -15,10 +15,14 @@
 				 factory-method="getInstance"
 				/>
 
-        <service id="feedEntryService" class="Pascal\FeedDisplayerBundle\Service\FeedEntryService">
+        <service id="feedEntryService" class="Pascal\FeedDisplayerBundle\Service\FeedEntry\FeedEntryService">
 			<argument type="service" id="doctrine" strict="false" />
 			<argument type="service" id="cacheService" strict="false" />
         </service>
+
+		<service id="tagService" class="Pascal\FeedDisplayerBundle\Service\Tag\TagService">
+			<argument type="service" id="doctrine" strict="false" />
+		</service>
     </services>
 
 </container>
