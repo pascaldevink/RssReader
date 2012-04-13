@@ -2,18 +2,22 @@
 
 namespace Pascal\FeedDisplayerBundle\Service;
 
+use \Symfony\Component\HttpKernel\KernelInterface;
+
 class CacheService
 {
 	private static $instance;
 
+	/**
+	 * @var \Symfony\Component\HttpKernel\KernelInterface
+	 */
+	private $kernel;
 	private $memcached;
 
 	protected function __construct()
 	{
 		$this->memcached = new \Memcached();
 		$this->memcached->addServer('localhost', 11211);
-
-		$this->memcached->flush();
 	}
 
 	public static function getInstance()
@@ -26,8 +30,11 @@ class CacheService
 
 	public function set($key, $value)
 	{
+		if ($this->kernel->isDebug())
+			return;
+
 		try {
-			$this->memcached->set($key, $value);
+			$this->memcached->set($key, $value, 300);
 		}
 		catch (\Exception $e)
 		{
@@ -40,6 +47,9 @@ class CacheService
 
 	public function get($key)
 	{
+		if ($this->kernel->isDebug())
+			return null;
+
 		try {
 			return $this->memcached->get($key);
 		}
@@ -49,5 +59,10 @@ class CacheService
 			var_dump($this->memcached->getResultCode());
 			var_dump($e->getMessage());
 		}
+	}
+
+	public function setKernel(KernelInterface $kernel)
+	{
+		$this->kernel = $kernel;
 	}
 }

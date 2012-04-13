@@ -12,8 +12,11 @@
 		<service id="cacheService"
 				 class="%pascal_feed_displayer.cacheService.class%"
 				 factory-class="%pascal_feed_displayer.cacheService.class%"
-				 factory-method="getInstance"
-				/>
+				 factory-method="getInstance">
+			<call method="setKernel">
+				<argument type="service" id="kernel" />
+			</call>
+		</service>
 
         <service id="feedEntryService" class="Pascal\FeedDisplayerBundle\Service\FeedEntry\FeedEntryService">
 			<argument type="service" id="doctrine" strict="false" />
