@@ -92,7 +92,6 @@ class FeedEntryService
 
 		$dql .= ' ORDER BY fe.'. $filterSettings->getOrderField() .' ' . $filterSettings->getOrderType();
 
-		var_dump($dql);
 		$query = $this->entityManager->createQuery($dql);
 
 		if ($filterSettings->getSource()->wasSet())
