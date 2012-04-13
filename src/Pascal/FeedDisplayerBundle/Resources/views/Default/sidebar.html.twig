@@ -12,7 +12,7 @@
 	</li>
 	{% for feedType in feedTypes %}
 		<li>
-			<a href="">{{ feedType }}</a>
+			<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?source={{ feedType }}">{{ feedType }}</a>
 		</li>
 	{% endfor%}
 
@@ -22,7 +22,7 @@
 	</li>
 	{% for tag in tags %}
 		<li>
-			<a href="">{{ tag.name }}</a>
+			<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?tags[]={{ tag.name }}">{{ tag.name }}</a>
 		</li>
 	{% endfor%}
 </ul>

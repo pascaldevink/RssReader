@@ -2,19 +2,39 @@
 
 namespace Pascal\FeedDisplayerBundle\Service\FeedEntry;
 
+use \Symfony\Component\HttpFoundation\Request;
+
 class FeedEntryFilterSettings
 {
 	const DEFAULT_PAGE_SIZE = 25;
+	const ORDER_TYPE_ASC = 'ASC';
+	const ORDER_TYPE_DESC = 'DESC';
 
 	private $page = 1;
 	private $pageSize = self::DEFAULT_PAGE_SIZE;
 
-	private $orderField;
-	private $orderType;
+	private $orderField = 'lastUpdateTime';
+	private $orderType = self::ORDER_TYPE_DESC;
 
+	/**
+	 * @var \Pascal\FeedDisplayerBundle\Filter\SourceFilter
+	 */
 	private $source;
+
+	/**
+	 * @var \Pascal\FeedDisplayerBundle\Filter\TagFilter
+	 */
 	private $tagList;
 
+	public function __construct(Request $request)
+	{
+		$this->source = new \Pascal\FeedDisplayerBundle\Filter\SourceFilter(
+			$request->get('source')
+		);
+		$this->tagList = new \Pascal\FeedDisplayerBundle\Filter\TagFilter(
+			$request->get('tags')
+		);
+	}
 
 	public function setOrderField($orderField)
 	{
@@ -56,23 +76,37 @@ class FeedEntryFilterSettings
 		return $this->pageSize;
 	}
 
+	/**
+	 * @param \Pascal\FeedDisplayerBundle\Filter\SourceFilter $source
+	 */
 	public function setSource($source)
 	{
 		$this->source = $source;
 	}
 
+	/**
+	 * @return \Pascal\FeedDisplayerBundle\Filter\SourceFilter
+	 */
 	public function getSource()
 	{
 		return $this->source;
 	}
 
+	/**
+	 * @param \Pascal\FeedDisplayerBundle\Filter\TagFilter $tagList
+	 */
 	public function setTagList($tagList)
 	{
 		$this->tagList = $tagList;
 	}
 
+	/**
+	 * @return \Pascal\FeedDisplayerBundle\Filter\TagFilter
+	 */
 	public function getTagList()
 	{
 		return $this->tagList;
 	}
+
+
 }

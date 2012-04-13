@@ -13,7 +13,7 @@ class CacheService
 		$this->memcached = new \Memcached();
 		$this->memcached->addServer('localhost', 11211);
 
-//		$this->memcached->flush();
+		$this->memcached->flush();
 	}
 
 	public static function getInstance()

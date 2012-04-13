@@ -33,7 +33,7 @@ class FeedEntryService
 	{
 		$itemResult = new ItemResult();
 
-		$items = $this->getAllFeedEntries($filterSettings->getPage(), $filterSettings->getPageSize());
+		$items = $this->getAllFeedEntries($filterSettings);
 		$totalCount = $this->getNumberOfFeedEntries();
 		$filteredCount = count($items);
 
@@ -49,12 +49,14 @@ class FeedEntryService
 	 ******************************************************************************/
 
 	/**
-	 * @param int $page
-	 * @param int $pageSize
+	 * @param FeedEntryFilterSettings $filterSettings
 	 * @return \Pascal\FeedGathererBundle\Entity\FeedEntry[]
 	 */
-	protected function getAllFeedEntries($page, $pageSize)
+	protected function getAllFeedEntries(FeedEntryFilterSettings $filterSettings)
 	{
+		$page = $filterSettings->getPage();
+		$pageSize = $filterSettings->getPageSize();
+
 		$page = --$page;
 
 		$entries = $this->cacheService->get(self::KEY_ENTRIES_FOR_PAGE . $page);
@@ -63,12 +65,45 @@ class FeedEntryService
 			return $entries;
 		}
 
-		$query = $this->entityManager->createQuery(
-			'SELECT fe FROM PascalFeedGathererBundle:FeedEntry fe ORDER BY fe.lastUpdateTime DESC'
-		);
+		$whereClause = 'WHERE';
+		if ($filterSettings->getSource()->wasSet())
+		{
+			$whereClause .= ' f.type = :feedType';
+		}
+
+		if ($filterSettings->getTagList()->wasSet())
+		{
+			if ($whereClause !== 'WHERE')
+			{
+				$whereClause .= ' AND';
+			}
+			$whereClause .= ' t.name IN (:tagNames)';
+		}
+
+		$dql = '
+			SELECT fe, f
+			FROM PascalFeedGathererBundle:FeedEntry fe
+			JOIN fe.feed f
+			LEFT JOIN fe.tags t
+		';
+
+		if ($whereClause !== 'WHERE')
+			$dql .= $whereClause;
+
+		$dql .= ' ORDER BY fe.'. $filterSettings->getOrderField() .' ' . $filterSettings->getOrderType();
+
+		var_dump($dql);
+		$query = $this->entityManager->createQuery($dql);
+
+		if ($filterSettings->getSource()->wasSet())
+			$query->setParameter('feedType', $filterSettings->getSource()->getValue());
+
+		if ($filterSettings->getTagList()->wasSet())
+			$query->setParameter('tagNames', implode(',', $filterSettings->getTagList()->getValue()));
 
 		$query->setFirstResult($page * $pageSize);
 		$query->setMaxResults($pageSize);
+		$query->useResultCache(true);
 		$entries = $query->getResult();
 
 		$this->cacheService->set(self::KEY_ENTRIES_FOR_PAGE . $page, $entries);

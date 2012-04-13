@@ -12,7 +12,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request, $page = 1)
     {
 		$feedEntryService = $this->getFeedEntryService();
-		$filterSettings = new FeedEntryFilterSettings();
+		$filterSettings = new FeedEntryFilterSettings($request);
 		$filterSettings->setPage($page);
 
 		$entries = $feedEntryService->getFeedEntries($filterSettings);
