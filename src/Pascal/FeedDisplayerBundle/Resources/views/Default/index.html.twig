@@ -9,6 +9,14 @@
 {% for entry in entries %}
 	<div>
 		<h1><a href="{{ entry.url }}">{{ entry.title }}</a></h1>
+		{% if entry.tags|length > 0%}
+			<p>
+				{% for tag in entry.tags %}
+				<span class="label">{{ tag.name }}</span>
+				{% endfor %}
+			</p>
+		{% endif %}
+
 		{% autoescape false %}
 		{{ entry.description }}
 		{% endautoescape %}

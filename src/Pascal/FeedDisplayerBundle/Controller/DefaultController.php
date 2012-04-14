@@ -57,6 +57,11 @@ class DefaultController extends Controller
 		);
 	}
 
+	public function newEntriesCheckAction(Request $request)
+	{
+		return new \Symfony\Component\HttpFoundation\Response(rand(1, 25));
+	}
+
 	/**
 	 * @return \Pascal\FeedDisplayerBundle\Service\FeedEntry\FeedEntryService
 	 */

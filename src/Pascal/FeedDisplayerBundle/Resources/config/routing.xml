@@ -8,4 +8,10 @@
         <default key="_controller">PascalFeedDisplayerBundle:Default:index</default>
 		<default key="page">1</default>
     </route>
+
+	<!-- AJAX routes -->
+
+	<route id="PascalFeedDisplayerBundle_newEntriesCheck" pattern="/ajax/newEntriesCheck">
+		<default key="_controller">PascalFeedDisplayerBundle:Default:newEntriesCheck</default>
+	</route>
 </routes>
