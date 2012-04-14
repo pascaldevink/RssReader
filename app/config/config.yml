@@ -30,8 +30,14 @@ assetic:
         cssrewrite: ~
         # closure:
         #     jar: %kernel.root_dir%/java/compiler.jar
-        # yui_css:
-        #     jar: %kernel.root_dir%/java/yuicompressor-2.4.2.jar
+        yui_css:
+            jar: %kernel.root_dir%/java/yuicompressor-2.4.7.jar
+        yui_js:
+            jar: %kernel.root_dir%/java/yuicompressor-2.4.7.jar
+        coffee:
+            bin: /usr/local/bin/coffee
+            node: /usr/bin/node
+            apply_to: "\.coffee$"
 
 # Doctrine Configuration
 doctrine:
