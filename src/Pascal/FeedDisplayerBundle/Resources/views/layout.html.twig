@@ -7,10 +7,11 @@ Rss Reader
 {% block stylesheets %}
 	{{ parent() }}
 
-	{% stylesheets output='css/*.css' filter='yui_css,cssrewrite'
+	{% stylesheets output='css/*.css' filter='less,?yui_css,cssrewrite,'
 					'bundles/pascalfeeddisplayer/css/doc.css'
 					'bundles/pascalfeeddisplayer/css/bootstrap.min.css'
-					'bundles/pascalfeeddisplayer/css/bootstrap-responsive.min.css' %}
+					'bundles/pascalfeeddisplayer/css/bootstrap-responsive.min.css'
+					'@PascalFeedDisplayerBundle/Resources/public/css/base.less' %}
 	{# If your files are in web/css/, call them with: 'css/mystyle.css' #}
 		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="screen" />
 	{% endstylesheets %}
