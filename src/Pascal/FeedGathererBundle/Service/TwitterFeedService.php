@@ -3,6 +3,7 @@
 namespace Pascal\FeedGathererBundle\Service;
 
 use \Pascal\FeedGathererBundle\Entity\TwitterUser;
+use \Pascal\FeedGathererBundle\Entity\Feed;
 
 class TwitterFeedService implements FeedService
 {
@@ -33,7 +34,7 @@ class TwitterFeedService implements FeedService
 		return 'twitter';
 	}
 
-	public function downloadFeed(\Pascal\FeedGathererBundle\Entity\Feed $feed, \DateTime $lastUpdateTime)
+	public function downloadFeed(Feed $feed, \DateTime $lastUpdateTime)
 	{
 		$twitter = $this->getTwitter();
 		$twitterUser = $this->getTwitterUser($feed);
@@ -49,14 +50,15 @@ class TwitterFeedService implements FeedService
 		if ($code == 200)
 		{
 			$timeline = json_decode($response['response'], true);
-			$this->processItems($timeline, $twitterUser, $lastUpdateTime);
+			$this->processItems($timeline, $twitterUser, $feed, $lastUpdateTime);
 		}
 	}
 
 	/**
+	 * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
 	 * @return \Pascal\FeedGathererBundle\Entity\TwitterUser[]
 	 */
-	protected function getTwitterUser(\Pascal\FeedGathererBundle\Entity\Feed $feed)
+	protected function getTwitterUser(Feed $feed)
 	{
 		$dql = "
 			SELECT t
@@ -81,7 +83,7 @@ class TwitterFeedService implements FeedService
 		return $twitter;
 	}
 
-	protected function processItems($items, TwitterUser $twitterUser, \DateTime $lastUpdateTime)
+	protected function processItems($items, TwitterUser $twitterUser, Feed $feed, \DateTime $lastUpdateTime)
 	{
 		foreach($items as $item)
 		{
@@ -106,6 +108,7 @@ class TwitterFeedService implements FeedService
 				$feedEntry->setTitle('Link shared by ' . $author);
 				$feedEntry->setUrl($url['expanded_url']);
 				$feedEntry->setLastUpdateTime($dateTime);
+				$feedEntry->setFeed($feed);
 
 				$this->entityManager->persist($feedEntry);
 			}
