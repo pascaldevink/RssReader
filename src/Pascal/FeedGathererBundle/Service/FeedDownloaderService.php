@@ -45,7 +45,10 @@ class FeedDownloaderService
 			$feed->setLastUpdateTime(new \DateTime('now'));
 		}
 
+		$numberOfEntries = $this->entityManager->getUnitOfWork()->size();
 		$this->entityManager->flush();
+
+		return $numberOfEntries;
 	}
 
 	/**

@@ -59,11 +59,12 @@ class FeedEntryService
 
 		$page = --$page;
 
-		$entries = $this->cacheService->get(self::KEY_ENTRIES_FOR_PAGE . $page);
-		if ($entries)
-		{
-			return $entries;
-		}
+		// FIXME: Fix caching
+//		$entries = $this->cacheService->get(self::KEY_ENTRIES_FOR_PAGE . $page);
+//		if ($entries)
+//		{
+//			return $entries;
+//		}
 
 		$whereClause = 'WHERE';
 		if ($filterSettings->getSource()->wasSet())
@@ -78,6 +79,15 @@ class FeedEntryService
 				$whereClause .= ' AND';
 			}
 			$whereClause .= ' t.name IN (:tagNames)';
+		}
+
+		if ($filterSettings->getLastUpdateTime()->wasSet())
+		{
+			if ($whereClause !== 'WHERE')
+			{
+				$whereClause .= ' AND';
+			}
+			$whereClause .= ' fe.lastUpdateTime > :lastUpdateTime';
 		}
 
 		$dql = '
@@ -100,12 +110,21 @@ class FeedEntryService
 		if ($filterSettings->getTagList()->wasSet())
 			$query->setParameter('tagNames', implode(',', $filterSettings->getTagList()->getValue()));
 
-		$query->setFirstResult($page * $pageSize);
-		$query->setMaxResults($pageSize);
+		if ($filterSettings->getLastUpdateTime()->wasSet())
+			$query->setParameter('lastUpdateTime', $filterSettings->getLastUpdateTime()->getValue());
+
+		if ($filterSettings->getPaging())
+		{
+			$query->setFirstResult($page * $pageSize);
+			$query->setMaxResults($pageSize);
+		}
+
 		$query->useResultCache(true);
 		$entries = $query->getResult();
 
-		$this->cacheService->set(self::KEY_ENTRIES_FOR_PAGE . $page, $entries);
+		// FIXME: Fix caching
+//		$this->cacheService->set(self::KEY_ENTRIES_FOR_PAGE . $page, $entries);
+
 		return $entries;
 	}
 
@@ -114,9 +133,10 @@ class FeedEntryService
 	 */
 	protected function getNumberOfFeedEntries()
 	{
-		$numberOfResults = $this->cacheService->get(self::KEY_NUMBER_OF_PAGES);
-		if ($numberOfResults)
-			return $numberOfResults;
+		// FIXME: Fix caching
+//		$numberOfResults = $this->cacheService->get(self::KEY_NUMBER_OF_PAGES);
+//		if ($numberOfResults)
+//			return $numberOfResults;
 
 		$query = $this->entityManager->createQuery(
 			'SELECT COUNT(fe.id) FROM PascalFeedGathererBundle:FeedEntry fe ORDER BY fe.lastUpdateTime DESC'
@@ -124,7 +144,9 @@ class FeedEntryService
 
 		$numberOfResults = $query->getSingleScalarResult();
 
-		$this->cacheService->set(self::KEY_NUMBER_OF_PAGES, $numberOfResults);
+		// FIXME: Fix caching
+//		$this->cacheService->set(self::KEY_NUMBER_OF_PAGES, $numberOfResults);
+
 		return $numberOfResults;
 	}
 }

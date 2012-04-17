@@ -10,11 +10,21 @@ class FeedEntryFilterSettings
 	const ORDER_TYPE_ASC = 'ASC';
 	const ORDER_TYPE_DESC = 'DESC';
 
+	/**
+	 * @var bool
+	 */
+	private $paging = true;
+
 	private $page = 1;
 	private $pageSize = self::DEFAULT_PAGE_SIZE;
 
 	private $orderField = 'lastUpdateTime';
 	private $orderType = self::ORDER_TYPE_DESC;
+
+	/**
+	 * @var \Pascal\FeedDisplayerBundle\Filter\LastUpdateTimeFilter
+	 */
+	private $lastUpdateTime;
 
 	/**
 	 * @var \Pascal\FeedDisplayerBundle\Filter\SourceFilter
@@ -31,8 +41,18 @@ class FeedEntryFilterSettings
 		$this->source = new \Pascal\FeedDisplayerBundle\Filter\SourceFilter(
 			$request->get('source')
 		);
+
 		$this->tagList = new \Pascal\FeedDisplayerBundle\Filter\TagFilter(
 			$request->get('tags')
+		);
+
+		try {
+			$lastUpdateTimeValue = new \DateTime($request->get('lastUpdateTime', 'exception'));
+		} catch (\Exception $e) {
+			$lastUpdateTimeValue = null;
+		}
+		$this->lastUpdateTime = new \Pascal\FeedDisplayerBundle\Filter\LastUpdateTimeFilter(
+			$lastUpdateTimeValue
 		);
 	}
 
@@ -108,5 +128,35 @@ class FeedEntryFilterSettings
 		return $this->tagList;
 	}
 
+	/**
+	 * @return \Pascal\FeedDisplayerBundle\Filter\LastUpdateTimeFilter
+	 */
+	public function getLastUpdateTime()
+	{
+		return $this->lastUpdateTime;
+	}
 
+	/**
+	 * @param \Pascal\FeedDisplayerBundle\Filter\LastUpdateTimeFilter $lastUpdateTime
+	 */
+	public function setLastUpdateTime($lastUpdateTime)
+	{
+		$this->lastUpdateTime = $lastUpdateTime;
+	}
+
+	/**
+	 * @param boolean $paging
+	 */
+	public function setPaging($paging)
+	{
+		$this->paging = $paging;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getPaging()
+	{
+		return $this->paging;
+	}
 }
