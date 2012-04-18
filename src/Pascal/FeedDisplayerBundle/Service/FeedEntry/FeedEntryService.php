@@ -14,12 +14,14 @@ class FeedEntryService
 	 * @var \Doctrine\ORM\EntityManager
 	 */
 	private $entityManager;
-	private $cacheService;
 
-	public function __construct(\Symfony\Bundle\DoctrineBundle\Registry $doctrine, \Pascal\FeedDisplayerBundle\Service\CacheService $cacheService)
+//	private $cacheService;
+
+	public function __construct(\Symfony\Bundle\DoctrineBundle\Registry $doctrine)
+//								\Pascal\FeedDisplayerBundle\Service\CacheService $cacheService)
 	{
 		$this->entityManager = $doctrine->getEntityManager();
-		$this->cacheService = $cacheService;
+//		$this->cacheService = $cacheService;
 	}
 
 	/**

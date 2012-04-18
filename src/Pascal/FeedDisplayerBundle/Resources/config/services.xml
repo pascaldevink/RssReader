@@ -4,23 +4,23 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="pascal_feed_displayer.cacheService.class">Pascal\FeedDisplayerBundle\Service\CacheService</parameter>
-    </parameters>
+    <!--<parameters>-->
+        <!--<parameter key="pascal_feed_displayer.cacheService.class">Pascal\FeedDisplayerBundle\Service\CacheService</parameter>-->
+    <!--</parameters>-->
 
     <services>
-		<service id="cacheService"
-				 class="%pascal_feed_displayer.cacheService.class%"
-				 factory-class="%pascal_feed_displayer.cacheService.class%"
-				 factory-method="getInstance">
-			<call method="setKernel">
-				<argument type="service" id="kernel" />
-			</call>
-		</service>
+		<!--<service id="cacheService"-->
+				 <!--class="%pascal_feed_displayer.cacheService.class%"-->
+				 <!--factory-class="%pascal_feed_displayer.cacheService.class%"-->
+				 <!--factory-method="getInstance">-->
+			<!--<call method="setKernel">-->
+				<!--<argument type="service" id="kernel" />-->
+			<!--</call>-->
+		<!--</service>-->
 
         <service id="feedEntryService" class="Pascal\FeedDisplayerBundle\Service\FeedEntry\FeedEntryService">
 			<argument type="service" id="doctrine" strict="false" />
-			<argument type="service" id="cacheService" strict="false" />
+			<!--<argument type="service" id="cacheService" strict="false" />-->
         </service>
 
 		<service id="tagService" class="Pascal\FeedDisplayerBundle\Service\Tag\TagService">
