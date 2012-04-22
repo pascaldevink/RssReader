@@ -2,9 +2,9 @@
 
 namespace Pascal\FeedDisplayerBundle\Controller;
 
-use \Pascal\FeedDisplayerBundle\Filter\LastUpdateTimeFilter;
 use \Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use \Symfony\Component\HttpFoundation\Request;
+use \Pascal\FeedDisplayerBundle\Filter\LastUpdateTimeFilter;
 use \Pascal\FeedDisplayerBundle\Service\FeedEntry\FeedEntryFilterSettings;
 
 class DefaultController extends Controller
@@ -56,19 +56,6 @@ class DefaultController extends Controller
 				'tags'			=> $tags,
 			)
 		);
-	}
-
-	public function newEntriesCheckAction(Request $request)
-	{
-		$lastRefreshTime = $request->get('lastRefreshTime');
-		$lastUpdateTime = new \DateTime("@" . ceil($lastRefreshTime / 1000));
-
-		$filterSetings = new FeedEntryFilterSettings($request);
-		$filterSetings->setLastUpdateTime(new LastUpdateTimeFilter($lastUpdateTime));
-		$filterSetings->setPaging(false);
-
-		$result = $this->getFeedEntryService()->getFeedEntries($filterSetings);
-		return new \Symfony\Component\HttpFoundation\Response($result->getFilteredCount());
 	}
 
 	/**

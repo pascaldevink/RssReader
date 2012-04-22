@@ -42,6 +42,22 @@ class Tag implements \Serializable
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * @param int $id
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
+
+	/**
 	 * @param string $name
 	 */
 	public function setName($name)

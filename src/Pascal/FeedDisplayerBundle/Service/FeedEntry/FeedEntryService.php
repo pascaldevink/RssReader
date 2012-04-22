@@ -51,6 +51,19 @@ class FeedEntryService
 	 ******************************************************************************/
 
 	/**
+	 * Retrieve a FeedEntry by its id.
+	 *
+	 * @param int $feedEntryId
+	 * @return \Pascal\FeedGathererBundle\Entity\FeedEntry
+	 */
+	public function getFeedEntryById($feedEntryId)
+	{
+		$id = (int)$feedEntryId;
+		$feedEntry = $this->entityManager->getRepository("PascalFeedGathererBundle:FeedEntry")->find($id);
+		return $feedEntry;
+	}
+
+	/**
 	 * @param FeedEntryFilterSettings $filterSettings
 	 * @return \Pascal\FeedGathererBundle\Entity\FeedEntry[]
 	 */

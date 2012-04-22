@@ -1,9 +1,5 @@
 <?php
 
-//just for see if there are errors
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 //erases a directory recursively
 function rrmdir($dir) {
 	if (is_dir($dir)) {

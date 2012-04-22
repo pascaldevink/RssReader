@@ -12,6 +12,10 @@
 	<!-- AJAX routes -->
 
 	<route id="PascalFeedDisplayerBundle_newEntriesCheck" pattern="/ajax/newEntriesCheck">
-		<default key="_controller">PascalFeedDisplayerBundle:Default:newEntriesCheck</default>
+		<default key="_controller">PascalFeedDisplayerBundle:Ajax:newEntriesCheck</default>
+	</route>
+
+	<route id="PascalFeedDisplayerBundle_addTag" pattern="/ajax/addTag">
+		<default key="_controller">PascalFeedDisplayerBundle:Ajax:addTag</default>
 	</route>
 </routes>
