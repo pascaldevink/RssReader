@@ -42,6 +42,14 @@ Rss Reader
 			<a class="brand" href="#">
 				Feed reader
 			</a>
+			<ul class="nav">
+
+				{% if app.user %}
+				<li class=".pull-right">
+					<a href="{{ path('PascalFeedDisplayerBundle_logout') }}">Logout</a>
+				</li>
+				{% endif %}
+			</ul>
 		</div>
 	</div>
 </div>

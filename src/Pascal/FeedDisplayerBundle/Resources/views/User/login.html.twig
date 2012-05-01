@@ -1,0 +1,43 @@
+{% extends 'PascalFeedDisplayerBundle::layout.html.twig' %}
+
+{% block content %}
+
+{% if error %}
+	<div class="well">{{ error.message }}</div>
+{% endif %}
+
+<form class="form-horizontal" action="{{ path('PascalFeedDisplayerBundle_login_check') }}" method="post">
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="username">Username</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">
+						<i class="icon-envelope"></i></span><input id="username" name="_username" type="username" class="span3" value="{{ last_username }}" />
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="password">Password</label>
+			<div class="controls">
+				<div class="input-prepend">
+					<span class="add-on">
+						<i class="icon-lock"></i></span><input id="password" name="_password" type="password" class="span3" />
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="remember_me">Remember me</label>
+			<div class="controls">
+				<input type="checkbox" name="_remember_me" id="remember_me" checked="checked" />
+			</div>
+		</div>
+	</fieldset>
+	<div class="well">
+		<button type="submit" class="btn btn-primary">Login</button>
+	</div>
+</form>
+
+{% endblock %}
