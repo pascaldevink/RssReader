@@ -47,6 +47,10 @@ class FeedEntryTools
 	tagEntry: (event) =>
 		tool = $(event.currentTarget)
 
+		existingTagForm = tool.parent().find('div.tagForm')
+		if existingTagForm.length isnt 0
+			return existingTagForm.remove()
+
 		# Find the currently attached tags
 		tags = this.findCurrentTags tool
 
