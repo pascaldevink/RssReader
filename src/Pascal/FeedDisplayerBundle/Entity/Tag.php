@@ -100,7 +100,7 @@ class Tag implements \Serializable
 		$serialized = serialize(array(
 			$this->id,
 			$this->name,
-			$this->feedEntries,
+			$this->feedEntries->toArray(),
 		));
 
 		return $serialized;

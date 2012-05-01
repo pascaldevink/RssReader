@@ -1,5 +1,58 @@
+// Properties
+
 @body-color: white;
 
+// Mixins
+
+.border-radius (@radius: 5px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+	border-radius: @radius;
+}
+
+// Styles
+
 body {
+    padding-top: 60px;
 	background-color: @body-color;
 }
+
+.entry {
+	h1 {
+		font-size: 20px;
+	}
+
+	button {
+		background-color: transparent;
+		border: none;
+	}
+
+	.description {
+		max-width: 600px;
+	}
+
+	.tags {
+		.label {
+			margin-left: 0px;
+			margin-right: 4px;
+		}
+	}
+}
+
+html.no-touch .entry {
+	.tools {
+		float: right;
+		margin-top: -25px;
+	}
+
+	.tools .tagForm {
+	    background-color: white;
+		position: absolute;
+		right: 20px;
+		border: 1px solid black;
+		margin-top: 10px;
+		padding: 5px;
+		.border-radius(5px);
+	}
+}
+

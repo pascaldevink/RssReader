@@ -44,14 +44,50 @@ class AjaxController extends Controller
 		}
 
 		$feedEntry = $feedEntryService->getFeedEntryById($feedEntryId);
-		$tagService->tagFeedEntry($tag, $feedEntry);
+		$tagResult = $tagService->tagFeedEntry($tag, $feedEntry);
 
-		return new \Symfony\Component\HttpFoundation\Response($tag->getId() . '; ' . $tag->getName());
+		if ($tagResult === true)
+			$jsonTag = array('id' => $tag->getId(), 'name' => $tag->getName());
+		else
+			$jsonTag = array('error' => 'Feed entry already tagged');
+
+		return new \Symfony\Component\HttpFoundation\Response(json_encode($jsonTag));
 	}
 
 	public function deleteTagAction(Request $request)
 	{
+		$tagService = $this->getTagService();
+		$feedEntryService = $this->getFeedEntryService();
 
+		$tagId = $request->get('tagId');
+		$feedEntryId = $request->get('feedEntryId');
+
+		$tag = $tagService->getTagById($tagId);
+		$feedEntry = $feedEntryService->getFeedEntryById($feedEntryId);
+
+		$tagResult = $tagService->unTagFeedEntry($tag, $feedEntry);
+
+		if ($tagResult === true)
+			$jsonTag = array('message' => 'Tag removed');
+		else
+			$jsonTag = array('error' => 'Feed entry not tagged');
+
+		return new \Symfony\Component\HttpFoundation\Response(json_encode($jsonTag));
+	}
+
+	public function deleteFeedEntryAction(Request $request)
+	{
+		$feedEntryId = $request->get('feedEntryId');
+
+		$feedEntryService = $this->getFeedEntryService();
+		$tagResult = $feedEntryService->deleteFeedEntry($feedEntryId);
+
+		if ($tagResult !== false)
+			$jsonTag = array('message' => 'FeedEntry removed');
+		else
+			$jsonTag = array('error' => 'Feed entry not removed');
+
+		return new \Symfony\Component\HttpFoundation\Response(json_encode($jsonTag));
 	}
 
 	/**

@@ -22,7 +22,7 @@ class FeedEntry implements \Serializable
     private $id;
 
     /**
-     * @var text $title
+     * @var string $title
      *
      * @ORM\Column(name="title", type="text")
      */
@@ -43,14 +43,14 @@ class FeedEntry implements \Serializable
     private $author;
 
     /**
-     * @var text $description
+     * @var string $description
      *
      * @ORM\Column(name="description", type="text")
      */
     private $description;
 
     /**
-     * @var datetime $lastUpdateTime
+     * @var \DateTime $lastUpdateTime
      *
      * @ORM\Column(name="lastUpdateTime", type="datetime")
      */
@@ -76,6 +76,16 @@ class FeedEntry implements \Serializable
 		$this->tags = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 
+	/**
+	 * Set id
+	 *
+	 * @param integer $id
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
+
     /**
      * Get id
      *
@@ -89,7 +99,7 @@ class FeedEntry implements \Serializable
     /**
      * Set title
      *
-     * @param text $title
+     * @param string $title
      */
     public function setTitle($title)
     {
@@ -99,7 +109,7 @@ class FeedEntry implements \Serializable
     /**
      * Get title
      *
-     * @return text 
+     * @return string
      */
     public function getTitle()
     {
@@ -159,7 +169,7 @@ class FeedEntry implements \Serializable
     /**
      * Get description
      *
-     * @return text 
+     * @return string
      */
     public function getDescription()
     {
@@ -169,7 +179,7 @@ class FeedEntry implements \Serializable
     /**
      * Set lastUpdateTime
      *
-     * @param datetime $lastUpdateTime
+     * @param \DateTime $lastUpdateTime
      */
     public function setLastUpdateTime($lastUpdateTime)
     {
@@ -179,7 +189,7 @@ class FeedEntry implements \Serializable
     /**
      * Get lastUpdateTime
      *
-     * @return datetime 
+     * @return \DateTime
      */
     public function getLastUpdateTime()
     {
@@ -189,7 +199,7 @@ class FeedEntry implements \Serializable
     /**
      * Set feed
      *
-     * @param Pascal\FeedGathererBundle\Entity\Feed $feed
+     * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
      */
     public function setFeed(\Pascal\FeedGathererBundle\Entity\Feed $feed)
     {
@@ -199,7 +209,7 @@ class FeedEntry implements \Serializable
     /**
      * Get feed
      *
-     * @return Pascal\FeedGathererBundle\Entity\Feed 
+     * @return \Pascal\FeedGathererBundle\Entity\Feed
      */
     public function getFeed()
     {
@@ -235,10 +245,10 @@ class FeedEntry implements \Serializable
 			$this->author,
 			$this->description,
 			$this->feed,
-			$this->lastUpdateTime,
+			$this->lastUpdateTime->getTimestamp(),
 			$this->title,
 			$this->url,
-			$this->tags,
+			$this->tags->toArray(),
 		));
 
 		return $serialized;
@@ -260,10 +270,11 @@ class FeedEntry implements \Serializable
 			$this->author,
 			$this->description,
 			$this->feed,
-			$this->lastUpdateTime,
+			$lastUpdateTime,
 			$this->title,
 			$this->url,
 			$this->tags,
 			) = unserialize($serialized);
+		$this->lastUpdateTime = \DateTime::createFromFormat('U', $lastUpdateTime);
 	}
 }

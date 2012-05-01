@@ -7,23 +7,48 @@
 {% include 'PascalFeedDisplayerBundle:Default:pagination.html.twig' with {'page': page, 'numberOfPages' : numberOfPages } %}
 
 {% for entry in entries %}
-	<div>
+	<div class="entry" id="entry-{{ entry.id }}">
 		<h1><a href="{{ entry.url }}">{{ entry.title }}</a></h1>
-		{% if entry.tags|length > 0%}
-			<p>
+
+		<div class="tools">
+			<button class="icon-tags"></button>
+			<button class="icon-share"></button>
+			<button class="icon-remove-circle"></button>
+		</div>
+
+		{#{% if entry.tags|length > 0%}#}
+			<p class="tags">
 				{% for tag in entry.tags %}
-				<span class="label">{{ tag.name }}</span>
+				<span class="label"><span>{{ tag.name }}</span></span>
 				{% endfor %}
 			</p>
-		{% endif %}
+		{#{% endif %}#}
 
 		{% autoescape false %}
-		{{ entry.description }}
+		<div class="description">
+			{{ entry.description }}
+		</div>
 		{% endautoescape %}
 	</div>
 {% endfor %}
 
 {% include 'PascalFeedDisplayerBundle:Default:pagination.html.twig' with {'page': page, 'numberOfPages' : numberOfPages } %}
+
+{# Some javascript to build a feedEntry -> tag array #}
+<script type="text/javascript">
+	var feedEntryTags = [];
+	{% for entry in entries %}
+feedEntryTags[{{ entry.id }}] = [
+		{% for tag in entry.tags %}
+	{
+		tagId: {{ tag.id }},
+		tagName: '{{ tag.name }}'
+	},
+		{% endfor %}
+];
+	{% endfor %}
+</script>
+
 {% endblock %}
 
 {% block sidebar %}

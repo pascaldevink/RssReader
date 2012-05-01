@@ -33,6 +33,18 @@ class TagService
 	}
 
 	/**
+	 * Get a tab by its id or return null.
+	 *
+	 * @param string $name
+	 * @return \Pascal\FeedDisplayerBundle\Entity\Tag|null
+	 */
+	public function getTagById($id)
+	{
+		$tag = $this->entityManager->getRepository("PascalFeedDisplayerBundle:Tag")->find($id);
+		return $tag;
+	}
+
+	/**
 	 * Get a tab by its name or return null.
 	 *
 	 * @param string $name
@@ -61,18 +73,65 @@ class TagService
 		return $tag;
 	}
 
+	/**
+	 * Tag a given feed entry with the given tag.
+	 *
+	 * @param \Pascal\FeedDisplayerBundle\Entity\Tag $tag
+	 * @param \Pascal\FeedGathererBundle\Entity\FeedEntry $feedEntry
+	 * @return boolean
+	 */
 	public function tagFeedEntry(Tag $tag, \Pascal\FeedGathererBundle\Entity\FeedEntry $feedEntry)
 	{
-//		$tags = $feedEntry->getTags();
-//		$tags[] = $tag;
-//		$feedEntry->setTags($tags);
+		$feedEntries = $tag->getFeedEntries()->toArray();
+		if (in_array($tag, (array)$feedEntries))
+			return true;
 
-		$feedEntries = $tag->getFeedEntries();
 		$feedEntries[] = $feedEntry;
 		$tag->setFeedEntries($feedEntries);
 
-		$this->entityManager->persist($tag);
-		$this->entityManager->flush();
+		try
+		{
+			$this->entityManager->persist($tag);
+			$this->entityManager->flush();
+		}
+		catch(\Exception $e)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Removes tag from given feed entry.
+	 *
+	 * @param \Pascal\FeedDisplayerBundle\Entity\Tag $tag
+	 * @param \Pascal\FeedGathererBundle\Entity\FeedEntry $feedEntry
+	 * @return bool
+	 */
+	public function unTagFeedEntry(Tag $tag, \Pascal\FeedGathererBundle\Entity\FeedEntry $feedEntry)
+	{
+		$feedEntries = $tag->getFeedEntries()->toArray();
+		$newFeedEntries = array();
+		foreach ($feedEntries as $orgFeedEntry)
+		{
+			if ($orgFeedEntry != $feedEntry)
+				$newFeedEntries[] = $feedEntry;
+		}
+
+		$tag->setFeedEntries($newFeedEntries);
+
+		try
+		{
+			$this->entityManager->persist($tag);
+			$this->entityManager->flush();
+		}
+		catch(\Exception $e)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

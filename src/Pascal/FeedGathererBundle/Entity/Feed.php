@@ -94,7 +94,7 @@ class Feed implements \Serializable
 	/**
 	 * Add entries
 	 *
-	 * @param Pascal\FeedGathererBundle\Entity\FeedEntry $entries
+	 * @param \Pascal\FeedGathererBundle\Entity\FeedEntry $entries
 	 */
 	public function addFeedEntry(\Pascal\FeedGathererBundle\Entity\FeedEntry $entries)
 	{
@@ -104,7 +104,7 @@ class Feed implements \Serializable
 	/**
 	 * Get entries
 	 *
-	 * @return Doctrine\Common\Collections\Collection
+	 * @return \Doctrine\Common\Collections\Collection
 	 */
 	public function getEntries()
 	{
@@ -176,7 +176,7 @@ class Feed implements \Serializable
 			$this->disabled,
 			$this->type,
 			$this->typeId,
-			$this->lastUpdateTime,
+			$this->lastUpdateTime->getTimestamp(),
 		));
 	}
 
@@ -196,7 +196,8 @@ class Feed implements \Serializable
 			$this->disabled,
 			$this->type,
 			$this->typeId,
-			$this->lastUpdateTime,
+			$lastUpdateTime,
 			) = unserialize($serialized);
+		$this->lastUpdateTime = \DateTime::createFromFormat('U', $lastUpdateTime);
 	}
 }

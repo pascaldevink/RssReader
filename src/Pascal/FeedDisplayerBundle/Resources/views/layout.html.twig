@@ -11,19 +11,25 @@ Rss Reader
 					'bundles/pascalfeeddisplayer/css/doc.css'
 					'bundles/pascalfeeddisplayer/css/bootstrap.min.css'
 					'bundles/pascalfeeddisplayer/css/bootstrap-responsive.min.css'
+					'@PascalFeedDisplayerBundle/Resources/public/css/jquery.tagsinput.css'
 					'@PascalFeedDisplayerBundle/Resources/public/css/base.less' %}
 	{# If your files are in web/css/, call them with: 'css/mystyle.css' #}
 		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="screen" />
 	{% endstylesheets %}
 {% endblock %}
 
+{#filter='yui_js'#}
 {% block javascripts %}
 	{{ parent() }}
 
-	{% javascripts output='js/compressed.js' filter='yui_js'
+	{% javascripts output='js/compressed.js'
+		'@PascalFeedDisplayerBundle/Resources/public/js/modernizr.min.js'
 		'@PascalFeedDisplayerBundle/Resources/public/js/jquery.min.js'
 		'@PascalFeedDisplayerBundle/Resources/public/js/bootstrap.min.js'
+		'@PascalFeedDisplayerBundle/Resources/public/js/jquery.tagsinput.js'
 		'@PascalFeedDisplayerBundle/Resources/public/js/newEntriesChecker.coffee'
+		'@PascalFeedDisplayerBundle/Resources/public/js/feedEntryTools.coffee'
+		'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'
 	%}
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}

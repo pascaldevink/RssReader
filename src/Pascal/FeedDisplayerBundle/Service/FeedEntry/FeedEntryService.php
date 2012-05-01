@@ -164,4 +164,18 @@ class FeedEntryService
 
 		return $numberOfResults;
 	}
+
+	/**
+	 * Delete a Feed Entry object
+	 *
+	 * @param int $feedEntryId
+	 */
+	public function deleteFeedEntry($feedEntryId)
+	{
+		$query = $this->entityManager->createQuery(
+			'DELETE PascalFeedGathererBundle:FeedEntry fe WHERE fe.id = :feedEntryId'
+		);
+		$query->setParameter('feedEntryId', $feedEntryId);
+		$query->execute();
+	}
 }
