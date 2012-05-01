@@ -1,28 +1,30 @@
-<ul class="nav nav-list">
-	<li id="sidebar-inbox" class="active">
-		<a href="">
-			<i class="icon-home icon-white"></i>
-			Inbox
-		</a>
-	</li>
-
-	<li class="nav-header">
-		<i class="icon-th-list"></i>
-		Sources
-	</li>
-	{% for feedType in feedTypes %}
-		<li>
-			<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?source={{ feedType }}">{{ feedType }}</a>
+<div class="well sidebar-nav hidden-phone">
+	<ul class="nav nav-list">
+		<li id="sidebar-inbox" class="active">
+			<a href="">
+				<i class="icon-home icon-white"></i>
+				Inbox
+			</a>
 		</li>
-	{% endfor%}
 
-	<li class="nav-header">
-		<i class="icon-tags"></i>
-		Tags
-	</li>
-	{% for tag in tags %}
-		<li>
-			<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?tags[]={{ tag.name }}">{{ tag.name }}</a>
+		<li class="nav-header">
+			<i class="icon-th-list"></i>
+			Sources
 		</li>
-	{% endfor%}
-</ul>
+		{% for feedType in feedTypes %}
+			<li>
+				<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?source={{ feedType }}">{{ feedType }}</a>
+			</li>
+		{% endfor%}
+
+		<li class="nav-header">
+			<i class="icon-tags"></i>
+			Tags
+		</li>
+		{% for tag in tags %}
+			<li>
+				<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?tags[]={{ tag.name }}">{{ tag.name }}</a>
+			</li>
+		{% endfor%}
+	</ul>
+</div>

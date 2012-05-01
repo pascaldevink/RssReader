@@ -37,6 +37,9 @@ security:
             remember_me:
                 key: "This is the secret key that is used for the 'remember me' function!"
                 path: /
+            #anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

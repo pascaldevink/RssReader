@@ -3,17 +3,20 @@
 {% block content %}
 
 {% if error %}
-	<div class="well">{{ error.message }}</div>
+	<div class="alert alert-error">
+		<a class="close" data-dismiss="alert" href="#">×</a>
+		{{ error.message }}
+	</div>
 {% endif %}
 
-<form class="form-horizontal" action="{{ path('PascalFeedDisplayerBundle_login_check') }}" method="post">
+<form class="form-horizontal span6" action="{{ path('PascalFeedDisplayerBundle_login_check') }}" method="post">
 	<fieldset>
 		<div class="control-group">
-			<label class="control-label" for="username">Username</label>
+			<label class="control-label" for="email">Email address</label>
 			<div class="controls">
 				<div class="input-prepend">
 					<span class="add-on">
-						<i class="icon-envelope"></i></span><input id="username" name="_username" type="username" class="span3" value="{{ last_username }}" />
+						<i class="icon-envelope"></i></span><input id="email" name="_username" type="text" class="span3" value="{{ last_username }}" />
 				</div>
 			</div>
 		</div>
@@ -37,6 +40,7 @@
 	</fieldset>
 	<div class="well">
 		<button type="submit" class="btn btn-primary">Login</button>
+		<a class="btn disabled" href="">Register</a>
 	</div>
 </form>
 
