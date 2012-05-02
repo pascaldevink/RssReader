@@ -26,8 +26,12 @@
 		</service>
 
 		<service id="feedDownloader" class="Pascal\FeedGathererBundle\Service\FeedDownloaderService">
-			<argument type="service" id="doctrine" strict="false" />
-			<argument type="service" id="feedHandler" strict="false" />
+			<call method="setEntityManager">
+				<argument type="service" id="doctrine" strict="false" />
+			</call>
+			<call method="setFeedHandlerService">
+				<argument type="service" id="feedHandler" strict="false" />
+			</call>
 		</service>
 
 	</services>

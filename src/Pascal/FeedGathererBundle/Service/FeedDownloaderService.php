@@ -17,9 +17,19 @@ class FeedDownloaderService
 	 */
 	private $feedHandlerService;
 
-	public function __construct(\Symfony\Bundle\DoctrineBundle\Registry $doctrine, FeedHandlerService $feedHandlerService)
+	/**
+	 * @param \Symfony\Bundle\DoctrineBundle\Registry $doctrine
+	 */
+	public function setEntityManager(\Symfony\Bundle\DoctrineBundle\Registry $doctrine)
 	{
 		$this->entityManager = $doctrine->getEntityManager();
+	}
+
+	/**
+	 * @param \Pascal\FeedGathererBundle\Service\FeedHandlerService $feedHandlerService
+	 */
+	public function setFeedHandlerService($feedHandlerService)
+	{
 		$this->feedHandlerService = $feedHandlerService;
 	}
 
@@ -45,6 +55,17 @@ class FeedDownloaderService
 			$feed->setLastUpdateTime(new \DateTime('now'));
 		}
 
+		$numberOfEntries = $this->save();
+		return $numberOfEntries;
+	}
+
+	/**
+	 * Flush the work in the entity manager and return the number of entities that were touched.
+	 *
+	 * @return int
+	 */
+	protected function save()
+	{
 		$numberOfEntries = $this->entityManager->getUnitOfWork()->size();
 		$this->entityManager->flush();
 

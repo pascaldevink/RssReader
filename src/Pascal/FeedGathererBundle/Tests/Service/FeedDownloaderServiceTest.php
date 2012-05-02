@@ -10,31 +10,74 @@ class FeedDownloaderServiceTest extends \PHPUnit_Framework_TestCase
 
 	public function testDownloadFeeds()
 	{
-		$this->markTestSkipped('Skipped untill further notice');
+		$feedHandlerService = new \Pascal\FeedGathererBundle\Service\FeedHandlerService();
+		$mockFeedHandler = new MockFeedHandler('mock');
+		$feedHandlerService->addFeedHandler($mockFeedHandler);
+		$secondMockFeedHandler = new MockFeedHandler('mock2');
+		$feedHandlerService->addFeedHandler($secondMockFeedHandler);
 
-		$mockFeedService = new MockFeedService();
-
-		$feedDownloader = new FeedDownloaderService(new \Pascal\FeedGathererBundle\Tests\Mock\MockDoctrine());
-		$feedDownloader->addFeedService($mockFeedService);
-
+		$feedDownloader = new MockFeedDownloaderService();
+		$feedDownloader->setFeedHandlerService($feedHandlerService);
 		$feedDownloader->downloadFeeds(new \DateTime());
 
-		$this->assertTrue($mockFeedService->isCalled);
+		$this->assertTrue($mockFeedHandler->getIsCalled());
+		$this->assertEquals(1, $mockFeedHandler->getCallTimes());
+
+		$this->assertFalse($secondMockFeedHandler->getIsCalled());
+		$this->assertEquals(0, $secondMockFeedHandler->getCallTimes());
 	}
 }
 
-class MockFeedService implements FeedService
+class MockFeedDownloaderService extends FeedDownloaderService
 {
-	public $isCalled = false;
-	public $dateIsSet = false;
-
-	public function downloadFeed(\Pascal\FeedGathererBundle\Entity\Feed $feed,  \DateTime $lastUpdateTime)
+	protected function getFeeds(\DateTime $lastUpdateTime)
 	{
-		$this->isCalled = true;
+		$feeds = array();
+
+		$feed1 = new \Pascal\FeedGathererBundle\Entity\Feed();
+		$feed1->setType('mock');
+		$feed1->setTypeId(1);
+		$feed1->setDisabled(false);
+		$feeds[] = $feed1;
+
+		return $feeds;
+	}
+
+	protected function save()
+	{
+		return 1;
+	}
+}
+
+class MockFeedHandler implements FeedService
+{
+	private $isCalled = false;
+	private $callTimes = 0;
+	private $serviceType = 'mock';
+
+	public function __construct($serviceType)
+	{
+		$this->serviceType = $serviceType;
 	}
 
 	public function getServiceType()
 	{
-		return 'mock';
+		return $this->serviceType;
+	}
+
+	public function downloadFeed(\Pascal\FeedGathererBundle\Entity\Feed $feed, \DateTime $lastUpdateTime)
+	{
+		$this->isCalled = true;
+		$this->callTimes++;
+	}
+
+	public function getIsCalled()
+	{
+		return $this->isCalled;
+	}
+
+	public function getCallTimes()
+	{
+		return $this->callTimes;
 	}
 }
