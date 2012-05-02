@@ -33,6 +33,21 @@ class TagService
 	}
 
 	/**
+	 * @return \Pascal\FeedDisplayerBundle\Entity\ItemResult
+	 */
+	public function getTagsWithFeedEntries()
+	{
+		$itemResult = new \Pascal\FeedDisplayerBundle\Entity\ItemResult();
+
+		$tags = $this->getTagsWithFeedEntriesFromDatabase();
+		$itemResult->setItemList($tags);
+		$itemResult->setTotalCount(count($tags));
+		$itemResult->setFilteredCount(count($tags));
+
+		return $itemResult;
+	}
+
+	/**
 	 * Get a tab by its id or return null.
 	 *
 	 * @param string $name
@@ -140,6 +155,22 @@ class TagService
 	protected function getTagsFromDatabase()
 	{
 		$tags = $this->entityManager->getRepository("PascalFeedDisplayerBundle:Tag")->findAll();
+		return $tags;
+	}
+
+	/**
+	 * @return \Pascal\FeedDisplayerBundle\Entity\Tag[]
+	 */
+	protected function getTagsWithFeedEntriesFromDatabase()
+	{
+		$dql = '
+			SELECT t
+			FROM PascalFeedDisplayerBundle:Tag t
+			JOIN t.feedEntries fe';
+
+		$query = $this->entityManager->createQuery($dql);
+		$tags = $query->execute();
+
 		return $tags;
 	}
 }

@@ -45,7 +45,7 @@ class DefaultController extends Controller
 		}
 
 		$tagService = $this->getTagService();
-		$tagResult = $tagService->getTags();
+		$tagResult = $tagService->getTagsWithFeedEntries();
 		$tags = $tagResult->getItemList();
 
 		return $this->render(
