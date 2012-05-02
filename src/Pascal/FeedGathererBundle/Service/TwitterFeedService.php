@@ -23,9 +23,23 @@ class TwitterFeedService implements FeedService
 	 */
 	protected $twitter;
 
-	public function __construct(\Symfony\Bundle\DoctrineBundle\Registry $doctrine, \tmhOAuth $twitter)
+	public function __construct()
+	{
+	}
+
+	/**
+	 * @param \Symfony\Bundle\DoctrineBundle\Registry $doctrine
+	 */
+	public function setEntityManager(\Symfony\Bundle\DoctrineBundle\Registry $doctrine)
 	{
 		$this->entityManager = $doctrine->getEntityManager();
+	}
+
+	/**
+	 * @param \tmhOAuth $twitter
+	 */
+	public function setTwitter($twitter)
+	{
 		$this->twitter = $twitter;
 	}
 
@@ -50,7 +64,8 @@ class TwitterFeedService implements FeedService
 		if ($code == 200)
 		{
 			$timeline = json_decode($response['response'], true);
-			$this->processItems($timeline, $twitterUser, $feed, $lastUpdateTime);
+			$feedEntries = $this->processItems($timeline, $twitterUser, $feed, $lastUpdateTime);
+			$this->saveItems($feedEntries);
 		}
 	}
 
@@ -83,13 +98,27 @@ class TwitterFeedService implements FeedService
 		return $twitter;
 	}
 
+	/**
+	 * Process all twitter entries by checking them for links.
+	 *
+	 * @param array $items
+	 * @param \Pascal\FeedGathererBundle\Entity\TwitterUser $twitterUser
+	 * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
+	 * @param \DateTime $lastUpdateTime
+	 */
 	protected function processItems($items, TwitterUser $twitterUser, Feed $feed, \DateTime $lastUpdateTime)
 	{
+		$feedEntries = array();
+
 		foreach($items as $item)
 		{
-			// FIXME: Add time check
-			// TODO: ADD whitelist/blacklist user check
+			// TODO: Add time check
 			// TODO: ADD used link check
+
+			// whitelist/blacklist user check
+			$username = $item['user']['username'];
+			if ($this->isUserOnBlacklist($twitterUser->getBlacklistUsernames(), $username))
+				continue;
 
 			$urls = $item['entities']['urls'];
 			if (empty($urls))
@@ -110,10 +139,39 @@ class TwitterFeedService implements FeedService
 				$feedEntry->setLastUpdateTime($dateTime);
 				$feedEntry->setFeed($feed);
 
-				$this->entityManager->persist($feedEntry);
+				$feedEntries[] = $feedEntry;
 			}
 		}
 
+		return $feedEntries;
+	}
+
+	/**
+	 * Save the given FeedEntry items
+	 * @param \Pascal\FeedGathererBundle\Entity\FeedEntry[]  $items
+	 */
+	protected function saveItems(array $items)
+	{
+		foreach($items as $feedEntry)
+		{
+			$this->entityManager->persist($feedEntry);
+		}
+
 		$this->entityManager->flush();
+	}
+
+	/**
+	 * Return whether or not if the given username exists in the array of blacklisted usernames.
+	 *
+	 * @param $blacklist
+	 * @param $username
+	 * @return bool
+	 */
+	protected function isUserOnBlacklist($blacklist, $username)
+	{
+		if (is_null($blacklist) || !is_array($blacklist))
+			return false;
+
+		return in_array($username, $blacklist);
 	}
 }
