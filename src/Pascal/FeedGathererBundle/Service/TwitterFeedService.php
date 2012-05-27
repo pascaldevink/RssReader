@@ -60,20 +60,24 @@ class TwitterFeedService implements FeedService
 			'include_entities' => true
 		));
 
+		$numberOfItems = 0;
 		$response = $twitter->getResponse();
 		if ($code == 200)
 		{
 			$timeline = json_decode($response['response'], true);
 			$feedEntries = $this->processItems($timeline, $twitterUser, $feed, $lastUpdateTime);
+			$numberOfItems = count($feedEntries);
 			$this->saveItems($feedEntries);
 		}
+
+		return $numberOfItems;
 	}
 
 	/**
 	 * @param \Pascal\FeedGathererBundle\Entity\Feed $feed
-	 * @return \Pascal\FeedGathererBundle\Entity\TwitterUser[]
+	 * @return \Pascal\FeedGathererBundle\Entity\TwitterUser
 	 */
-	protected function getTwitterUser(Feed $feed)
+	public function getTwitterUser(Feed $feed)
 	{
 		$dql = "
 			SELECT t

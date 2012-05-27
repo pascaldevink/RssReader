@@ -41,13 +41,15 @@ class FeedDownloaderService
 		$feeds = $this->getFeeds($lastUpdateTime);
 		$feedServices = $this->feedHandlerService->getFeedHandlers();
 
+		$numberOfEntries = 0;
+
 		foreach($feeds as $feed)
 		{
 			foreach($feedServices as $feedHandler)
 			{
 				if ($feedHandler->getServiceType() == $feed->getType())
 				{
-					$feedHandler->downloadFeed($feed, $lastUpdateTime);
+					$numberOfEntries += $feedHandler->downloadFeed($feed, $lastUpdateTime);
 					break;
 				}
 			}
@@ -55,21 +57,17 @@ class FeedDownloaderService
 			$feed->setLastUpdateTime(new \DateTime('now'));
 		}
 
-		$numberOfEntries = $this->save();
+		$this->save();
 		return $numberOfEntries;
 	}
 
 	/**
-	 * Flush the work in the entity manager and return the number of entities that were touched.
-	 *
-	 * @return int
+	 * Flush the work in the entity manager
 	 */
 	protected function save()
 	{
-		$numberOfEntries = $this->entityManager->getUnitOfWork()->size();
+		$this->entityManager->getUnitOfWork()->size();
 		$this->entityManager->flush();
-
-		return $numberOfEntries;
 	}
 
 	/**

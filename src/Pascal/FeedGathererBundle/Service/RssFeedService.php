@@ -39,7 +39,10 @@ class RssFeedService implements FeedService
 	{
 		$rssFeed = $this->getRssFeed($feed);
 		$items = $this->getEntriesFromFeed($rssFeed);
+		$numberOfItems = count($items);
 		$this->processItems($items, $feed, $rssFeed, $lastUpdateTime);
+
+		return $numberOfItems;
 	}
 
 	/**
