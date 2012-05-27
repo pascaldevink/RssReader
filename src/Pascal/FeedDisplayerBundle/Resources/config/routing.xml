@@ -14,9 +14,18 @@
 	<route id="PascalFeedDisplayerBundle_logout" pattern="/logout">
 	</route>
 
+	<route id="PascalFeedDisplayerBundle_logout" pattern="/logout">
+	</route>
+
+	<route id="PascalFeedDisplayerBundle_settings" pattern="/settings/{serviceType}">
+		<default key="_controller">PascalFeedDisplayerBundle:User:settings</default>
+		<default key="serviceType">none</default>
+	</route>
+
 	<route id="PascalFeedDisplayerBundle_homepage" pattern="/{page}">
 		<default key="_controller">PascalFeedDisplayerBundle:Default:index</default>
 		<default key="page">1</default>
+		<requirement key="page">\d+</requirement>
 	</route>
 
 	<!-- AJAX routes -->

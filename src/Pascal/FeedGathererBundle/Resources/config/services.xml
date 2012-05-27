@@ -5,14 +5,14 @@
 		   xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
 	<services>
-		<service id="feedService.rss" class="Pascal\FeedGathererBundle\Service\RssFeedService" public="false">
+		<service id="feedService.rss" class="Pascal\FeedGathererBundle\Service\RssFeedService" public="true">
 			<argument type="service" id="doctrine" strict="false" />
 			<argument type="service" id="simplepie.rss" strict="false"/>
 			<argument>%kernel.cache_dir%</argument>
 			<tag name="feed.handler" />
 		</service>
 
-		<service id="feedService.twitter" class="Pascal\FeedGathererBundle\Service\TwitterFeedService" public="false">
+		<service id="feedService.twitter" class="Pascal\FeedGathererBundle\Service\TwitterFeedService" public="true">
 			<call method="setTwitter">
 				<argument type="service" id="twitter.rss" strict="false"/>
 			</call>

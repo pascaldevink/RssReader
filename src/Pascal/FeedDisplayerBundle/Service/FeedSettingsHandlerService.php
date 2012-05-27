@@ -1,12 +1,19 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: pascal
- * Date: 4/5/12
- * Time: 20:11
- * To change this template use File | Settings | File Templates.
- */
+
+namespace Pascal\FeedDisplayerBundle\Service;
+
 class FeedSettingsHandlerService
 {
 
+	private $feedSettingsHandlers = array();
+
+	public function getFeedSettingsHandlers()
+	{
+		return $this->feedSettingsHandlers;
+	}
+
+	public function addFeedSettingsHandler($feedSettingsHandler)
+	{
+		$this->feedSettingsHandlers[] = $feedSettingsHandler;
+	}
 }

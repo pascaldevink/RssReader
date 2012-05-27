@@ -26,4 +26,45 @@ class UserController extends Controller
 			'error'			=> $error,
 		));
 	}
+
+	public function settingsAction(Request $request)
+	{
+		$serviceType = $request->get('serviceType');
+		$feedSettingsHandlerService = $this->getFeedSettingsHandlerService();
+		$feedSettingsHandlers = $feedSettingsHandlerService->getFeedSettingsHandlers();
+
+		$currentFeedSettingsHandler = null;
+		if ($serviceType != 'none')
+		{
+			foreach($feedSettingsHandlers as $feedSettingsHandler)
+			{
+				if ($feedSettingsHandler->getServiceType() == $serviceType)
+					$currentFeedSettingsHandler = $feedSettingsHandler;
+			}
+		}
+
+//		$twitterFeedService = $this->getTwitterFeedService();
+//
+//		$feed = new \Pascal\FeedGathererBundle\Entity\Feed();
+//		$feed->setTypeId(1);
+//		$twitterUser = $twitterFeedService->getTwitterUser($feed);
+//		$blacklistUsernames = $twitterUser->getBlacklistUsernames();
+
+//		return $this->render('PascalFeedDisplayerBundle:User:settings.html.twig', array (
+//			'blacklistUsernames' => $blacklistUsernames
+//		));
+	}
+
+	public function accountAction(Request $request)
+	{
+
+	}
+
+	/**
+	 * @return \Pascal\FeedDisplayerBundle\Service\FeedSettingsHandlerService
+	 */
+	protected function getFeedSettingsHandlerService()
+	{
+		return $this->get('feedSettingsHandler');
+	}
 }

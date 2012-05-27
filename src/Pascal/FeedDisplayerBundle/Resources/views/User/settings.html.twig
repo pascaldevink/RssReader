@@ -1,0 +1,33 @@
+{% extends 'PascalFeedDisplayerBundle::layout.html.twig' %}
+
+{% block content %}
+<div class="span9">
+	<h1>Settings</h1>
+
+	<h2>Rss setting</h2>
+
+
+	<h2>Twitter settings</h2>
+
+	<h3>Blacklist</h3>
+	<form class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="twitter_blacklist">Add username</label>
+			<div class="controls">
+				<input type="text" class="span3" id="twitter_blacklist" />
+				<a href="" id="addTwitterBlacklist"><i class="icon-plus"></i></a>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<select name="twitter-blacklist" multiple="multiple" class="span3">
+					{% for username in blacklistUsernames %}
+					<option>{{ username }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+	</form>
+</div>
+
+{% endblock %}
