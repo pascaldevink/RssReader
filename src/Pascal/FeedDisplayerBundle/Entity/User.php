@@ -5,18 +5,46 @@ namespace Pascal\FeedDisplayerBundle\Entity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Pascal\FeedDisplayerBundle\Entity\User
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Pascal\FeedDisplayerBundle\Entity\UserRepository")
+ */
 class User implements UserInterface, \Serializable
 {
+	/**
+	 * @ORM\Column(type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
 
 	/**
-	 * @ORM\Column(type="string", length=255)
+	 * @ORM\Column(type="string", length=255, unique=true)
 	 */
-	protected $username;
+	private $email;
+
+	/**
+	 * @ORM\Column(type="string", length=32)
+	 */
+	private $salt;
 
 	/**
 	 * @ORM\Column(type="string", length=255)
 	 */
 	protected $password;
+
+	/**
+	 * @ORM\Column(name="is_active", type="boolean")
+	 */
+	private $isActive;
+
+	public function __construct()
+	{
+		$this->isActive = true;
+		$this->salt = md5(uniqid(null, true));
+	}
 
 	/**
 	 * Returns the roles granted to the user.
@@ -36,7 +64,7 @@ class User implements UserInterface, \Serializable
 	 */
 	function getRoles()
 	{
-		// TODO: Implement getRoles() method.
+		return array('ROLE_USER');
 	}
 
 	/**
@@ -49,7 +77,12 @@ class User implements UserInterface, \Serializable
 	 */
 	function getPassword()
 	{
-		// TODO: Implement getPassword() method.
+		return $this->password;
+	}
+
+	function setPassword($password)
+	{
+		$this->password = $password;
 	}
 
 	/**
@@ -61,7 +94,7 @@ class User implements UserInterface, \Serializable
 	 */
 	function getSalt()
 	{
-		// TODO: Implement getSalt() method.
+		return $this->salt;
 	}
 
 	/**
@@ -71,7 +104,12 @@ class User implements UserInterface, \Serializable
 	 */
 	function getUsername()
 	{
-		// TODO: Implement getUsername() method.
+		return $this->email;
+	}
+
+	function setUsername($username)
+	{
+		$this->email = $username;
 	}
 
 	/**
@@ -102,7 +140,7 @@ class User implements UserInterface, \Serializable
 	 */
 	function equals(UserInterface $user)
 	{
-		// TODO: Implement equals() method.
+		return $this->getUsername() === $user->getUsername();
 	}
 
 	/**
@@ -113,7 +151,15 @@ class User implements UserInterface, \Serializable
 	 */
 	public function serialize()
 	{
-		// TODO: Implement serialize() method.
+		$serialized = serialize(array(
+			$this->id,
+			$this->email,
+			$this->salt,
+			$this->password,
+			$this->isActive,
+		));
+
+		return $serialized;
 	}
 
 	/**
@@ -127,6 +173,12 @@ class User implements UserInterface, \Serializable
 	 */
 	public function unserialize($serialized)
 	{
-		// TODO: Implement unserialize() method.
+		list(
+			$this->id,
+			$this->email,
+			$this->salt,
+			$this->password,
+			$this->isActive,
+			) = unserialize($serialized);
 	}
 }

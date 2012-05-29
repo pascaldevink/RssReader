@@ -1,16 +1,15 @@
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
+        Pascal\FeedDisplayerBundle\Entity\User:
+            algorithm: sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-        in_memory:
-            users:
-                user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-                admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+        administration:
+            entity: { class: Pascal\FeedDisplayerBundle\Entity\User }
 
     firewalls:
         dev:
@@ -35,7 +34,7 @@ security:
                 target: /
             switch_user: { role: ROLE_ADMIN }
             remember_me:
-                key: "This is the secret key that is used for the 'remember me' function!"
+                key: "Cez very zecret key yes? It iz used f0r remembering cez user!"
                 path: /
             #anonymous: ~
             #http_basic:
