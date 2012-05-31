@@ -39,13 +39,14 @@ class FeedCommand extends ContainerAwareCommand
 			$output->writeln("Input translates to the following time: " . print_r($lastUpdateTime, true));
 		}
 
-		$feedHandler = $this->getFeedHandler();
+		$feedHandler = $this->getFeedDownloader();
 		$numberOfEntries = $feedHandler->downloadFeeds($lastUpdateTime);
 
 		$output->writeln("Added $numberOfEntries new entries");
 
 		try {
-			$this->mailResults($numberOfEntries);
+			$numberOfHandlers = count($this->getFeedHandlerService()->getFeedHandlers());
+			$this->mailResults($numberOfEntries, $numberOfHandlers);
 		}
 		catch(\Swift_TransportException $e)
 		{
@@ -53,7 +54,7 @@ class FeedCommand extends ContainerAwareCommand
 		}
 	}
 
-	protected function mailResults($numberOfEntries)
+	protected function mailResults($numberOfEntries, $numberOfHandlers)
 	{
 		$message = \Swift_Message::newInstance()
 			->setSubject('RssReader import log')
@@ -62,7 +63,7 @@ class FeedCommand extends ContainerAwareCommand
 			->setBody(
 				$this->getContainer()->get('templating')->render(
 					'PascalFeedGathererBundle:Feed:mail.txt.twig',
-					array('numberOfEntries' => $numberOfEntries)
+					array('numberOfEntries' => $numberOfEntries, 'numberOfHandlers' => $numberOfHandlers)
 				)
 			);
 
@@ -72,9 +73,18 @@ class FeedCommand extends ContainerAwareCommand
 	/**
 	 * @return \Pascal\FeedGathererBundle\Service\FeedDownloaderService
 	 */
-	protected function getFeedHandler()
+	protected function getFeedDownloader()
 	{
-		$feedHandler = $this->getContainer()->get('feedDownloader');
+		$feedDownloader = $this->getContainer()->get('feedDownloader');
+		return $feedDownloader;
+	}
+
+	/**
+	 * @return \Pascal\FeedGathererBundle\Service\FeedHandlerService
+	 */
+	public function getFeedHandlerService()
+	{
+		$feedHandler = $this->getContainer()->get('feedHandler');
 		return $feedHandler;
 	}
 }
