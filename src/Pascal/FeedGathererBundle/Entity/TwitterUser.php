@@ -52,7 +52,7 @@ class TwitterUser
 	/**
 	 * @var string $blacklistUsernames
 	 *
-	 * @ORM\Column(name="blacklistUsernames", type="text")
+	 * @ORM\Column(name="blacklistUsernames", type="text", nullable=true)
 	 */
 	private $blacklistUsernames;
 
