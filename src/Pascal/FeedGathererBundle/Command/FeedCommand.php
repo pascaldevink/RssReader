@@ -43,6 +43,30 @@ class FeedCommand extends ContainerAwareCommand
 		$numberOfEntries = $feedHandler->downloadFeeds($lastUpdateTime);
 
 		$output->writeln("Added $numberOfEntries new entries");
+
+		try {
+			$this->mailResults($numberOfEntries);
+		}
+		catch(\Swift_TransportException $e)
+		{
+			$this->getContainer()->get('logger')->err('Unable to send emails: ' . $e->getMessage());
+		}
+	}
+
+	protected function mailResults($numberOfEntries)
+	{
+		$message = \Swift_Message::newInstance()
+			->setSubject('RssReader import log')
+			->setFrom('noreply@inpiggy.nl')
+			->setTo('pascal.de.vink@gmail.com')
+			->setBody(
+				$this->getContainer()->get('templating')->render(
+					'PascalFeedGathererBundle:Feed:mail.txt.twig',
+					array('numberOfEntries' => $numberOfEntries)
+				)
+			);
+
+		$this->getContainer()->get('mailer')->send($message);
 	}
 
 	/**

@@ -120,7 +120,7 @@ class TwitterFeedService implements FeedService
 			// TODO: ADD used link check
 
 			// whitelist/blacklist user check
-			$username = $item['user']['username'];
+			$username = $item['user']['screen_name'];
 			if ($this->isUserOnBlacklist($twitterUser->getBlacklistUsernames(), $username))
 				continue;
 

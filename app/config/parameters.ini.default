@@ -5,10 +5,10 @@
     database_driver   = pdo_mysql
     database_port     =
 
-    mailer_transport  =
+    mailer_transport  = gmail
     mailer_host       =
-    mailer_user       =
-    mailer_password   =
+    mailer_user       = user@domain.tld
+    mailer_password   = pasword
 
     locale            = en
 
