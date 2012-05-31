@@ -50,9 +50,9 @@ class UserController extends Controller
 //		$twitterUser = $twitterFeedService->getTwitterUser($feed);
 //		$blacklistUsernames = $twitterUser->getBlacklistUsernames();
 
-//		return $this->render('PascalFeedDisplayerBundle:User:settings.html.twig', array (
+		return $this->render('PascalFeedDisplayerBundle:User:settings.html.twig', array (
 //			'blacklistUsernames' => $blacklistUsernames
-//		));
+		));
 	}
 
 	public function accountAction(Request $request)
