@@ -52,6 +52,6 @@ feedEntryTags[{{ entry.id }}] = [
 {% endblock %}
 
 {% block sidebar %}
-	{% render "PascalFeedDisplayerBundle:Default:sidebar" with {'currentPage': 'inbox'} %}
-	{#{% include 'PascalFeedDisplayerBundle:Default:sidebar.html.twig' with {'currentPage': 'inbox'} %}#}
+	{% render "PascalFeedDisplayerBundle:Default:sidebar" with {'currentPage': currentPage} %}
+	{#{% include 'PascalFeedDisplayerBundle:Default:sidebar.html.twig' with {'currentPage': currentPage} %}#}
 {% endblock %}

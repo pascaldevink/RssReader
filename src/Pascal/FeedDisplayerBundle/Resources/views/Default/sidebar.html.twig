@@ -1,8 +1,8 @@
 <div class="well sidebar-nav hidden-phone">
 	<ul class="nav nav-list">
-		<li id="sidebar-inbox" class="active">
+		<li id="sidebar-inbox" {% if currentPage == 'inbox' %} class="active" {% endif %}>
 			<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}">
-				<i class="icon-home icon-white"></i>
+				<i class="icon-home {% if currentPage == 'inbox' %}icon-white{% endif %}"></i>
 				Inbox
 			</a>
 		</li>
@@ -12,7 +12,7 @@
 			Sources
 		</li>
 		{% for feedType in feedTypes %}
-			<li>
+			<li {% if currentPage == feedType %}class="active"{% endif %}>
 				<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?source={{ feedType }}">{{ feedType }}</a>
 			</li>
 		{% endfor%}
@@ -22,7 +22,7 @@
 			Tags
 		</li>
 		{% for tag in tags %}
-			<li>
+        <li {% if currentPage == tag.name %}class="active"{% endif %}>
 				<a href="{{ path('PascalFeedDisplayerBundle_homepage') }}?tags[]={{ tag.name }}">{{ tag.name }}</a>
 			</li>
 		{% endfor%}

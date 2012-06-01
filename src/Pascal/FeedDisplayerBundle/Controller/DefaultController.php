@@ -22,6 +22,16 @@ class DefaultController extends Controller
 		$endNumber = $page * 25 - 25 + $entries->getFilteredCount();
 		$numberOfPages = ceil($entries->getTotalCount() / 25);
 
+		$currentPage = 'inbox';
+		if ($filterSettings->getSource()->getValue())
+		{
+			$currentPage = $filterSettings->getSource()->getValue();
+		}
+		else if ($filterSettings->getTagList()->getValue())
+		{
+			$currentPage = current($filterSettings->getTagList()->getValue());
+		}
+
         return $this->render(
 			'PascalFeedDisplayerBundle:Default:index.html.twig',
 			array(
@@ -31,6 +41,7 @@ class DefaultController extends Controller
 				'page'				=> $page,
 				'numberOfPages'		=> $numberOfPages,
 				'entries'			=> $entries->getItemList(),
+				'currentPage'		=> $currentPage,
 			)
 		);
     }
