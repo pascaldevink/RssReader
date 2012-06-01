@@ -39,8 +39,7 @@ class RssFeedService implements FeedService
 	{
 		$rssFeed = $this->getRssFeed($feed);
 		$items = $this->getEntriesFromFeed($rssFeed);
-		$numberOfItems = count($items);
-		$this->processItems($items, $feed, $rssFeed, $lastUpdateTime);
+		$numberOfItems = $this->processItems($items, $feed, $rssFeed, $lastUpdateTime);
 
 		return $numberOfItems;
 	}
@@ -87,6 +86,8 @@ class RssFeedService implements FeedService
 	 */
 	protected function processItems($items, Feed $feed, RssFeed $rssFeed, \DateTime $lastUpdateTime)
 	{
+		$numberOfItems = 0;
+
 		foreach ($items as $item)
 		{
 			$dateTime = new \DateTime($item->get_date());
@@ -102,8 +103,11 @@ class RssFeedService implements FeedService
 			$feedEntry->setLastUpdateTime($dateTime);
 			$feedEntry->setFeed($feed);
 
+			$numberOfItems++;
 			$this->entityManager->persist($feedEntry);
 		}
+
+		return $numberOfItems;
 	}
 
 	/**

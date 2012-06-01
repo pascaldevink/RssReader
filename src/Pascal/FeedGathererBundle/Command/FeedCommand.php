@@ -44,13 +44,16 @@ class FeedCommand extends ContainerAwareCommand
 
 		$output->writeln("Added $numberOfEntries new entries");
 
-		try {
-			$numberOfHandlers = count($this->getFeedHandlerService()->getFeedHandlers());
-			$this->mailResults($numberOfEntries, $numberOfHandlers);
-		}
-		catch(\Swift_TransportException $e)
+		if ($numberOfEntries > 0)
 		{
-			$this->getContainer()->get('logger')->err('Unable to send emails: ' . $e->getMessage());
+			try {
+				$numberOfHandlers = count($this->getFeedHandlerService()->getFeedHandlers());
+				$this->mailResults($numberOfEntries, $numberOfHandlers);
+			}
+			catch(\Swift_TransportException $e)
+			{
+				$this->getContainer()->get('logger')->err('Unable to send emails: ' . $e->getMessage());
+			}
 		}
 	}
 

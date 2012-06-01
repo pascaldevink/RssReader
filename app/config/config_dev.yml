@@ -12,6 +12,13 @@ web_profiler:
 monolog:
     handlers:
         main:
+            type: fingers_crossed
+            action_level: debug
+            handler: grouped
+        grouped:
+            type: group
+            members: [stream, firephp]
+        stream:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
