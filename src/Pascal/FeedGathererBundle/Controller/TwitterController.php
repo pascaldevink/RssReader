@@ -57,7 +57,7 @@ class TwitterController extends \Symfony\Bundle\FrameworkBundle\Controller\Contr
 			$accessTokens = $twitter->extract_params($response['response']);
 			$request->getSession()->remove('oauth');
 
-			// FIXME: Refactor this to the twitter service
+			// TODO: Refactor this to the twitter service
 			$twitterUser = new \Pascal\FeedGathererBundle\Entity\TwitterUser();
 			$twitterUser->setOauthToken($accessTokens['oauth_token']);
 			$twitterUser->setOauthTokenSecret($accessTokens['oauth_token_secret']);
@@ -66,6 +66,13 @@ class TwitterController extends \Symfony\Bundle\FrameworkBundle\Controller\Contr
 
 			$em = $this->getDoctrine()->getEntityManager();
 			$em->persist($twitterUser);
+
+			$feed = new \Pascal\FeedGathererBundle\Entity\Feed();
+			$feed->setType('twitter');
+			$feed->setTypeId($twitterUser->getId());
+			$feed->setDisabled(false);
+			$em->persist($feed);
+
 			$em->flush();
 
 			$redirect = $this->generateUrl('PascalFeedDisplayerBundle_homepage', array(), true);
