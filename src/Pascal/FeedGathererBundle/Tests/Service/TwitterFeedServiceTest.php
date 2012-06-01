@@ -22,7 +22,7 @@ class TwitterFeedServiceTest extends \PHPUnit_Framework_TestCase
 		$items = array();
 		$item1 = array(
 			"id" => 12738165059,
-			'user' => array('name' => 'Pascal de Vink', 'username' => 'pascaldevink'),
+			'user' => array('name' => 'Pascal de Vink', 'screen_name' => 'pascaldevink'),
 			'text' => 'This is a tweet.',
 			'created_at' => 'Thu Oct 14 22:20:15 +0000 2010',
 			'entities' => array('urls' => array(
@@ -35,7 +35,7 @@ class TwitterFeedServiceTest extends \PHPUnit_Framework_TestCase
 			))
 		);
 		$item2 = array(
-			'user' => array('name' => 'Jan Janssen', 'username' => 'janjanssen'),
+			'user' => array('name' => 'Jan Janssen', 'screen_name' => 'janjanssen'),
 		);
 		$items[] = $item1;
 		$items[] = $item2;
