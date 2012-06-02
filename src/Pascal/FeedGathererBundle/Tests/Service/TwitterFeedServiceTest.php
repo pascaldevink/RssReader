@@ -46,7 +46,16 @@ class TwitterFeedServiceTest extends \PHPUnit_Framework_TestCase
 		$feed = new Feed();
 		$lastUpdateTime = new \DateTime();
 
+		$logger = $this->getMockBuilder('\Symfony\Bridge\Monolog\Logger')
+					->disableOriginalConstructor()
+					->getMock();
+		$logger
+			->expects($this->once())
+			->method('info')
+			->will($this->returnValue(true));
+
 		$service = new MockTwitterFeedService();
+		$service->setLogger($logger);
 		$feedEntries = $service->callProcessItems($items, $twitterUser, $feed, $lastUpdateTime);
 
 		$this->assertEquals(1, count($feedEntries));
