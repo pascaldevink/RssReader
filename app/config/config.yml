@@ -67,26 +67,3 @@ swiftmailer:
 jms_security_extra:
     secure_controllers:  true
     secure_all_services: false
-
-monolog:
-    handlers:
-        main:
-            type: fingers_crossed
-            action_level: error
-            handler: grouped
-        grouped:
-            type: group
-            members: [streamed, buffered]
-        streamed:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-        buffered:
-            type: buffer
-            handler: swift
-        swift:
-            type: swift_mailer
-            from_email: log@inpiggy.nl
-            to_email: pascal.de.vink@gmail.com
-            subject: RssReader: An error occured
-            level: error
