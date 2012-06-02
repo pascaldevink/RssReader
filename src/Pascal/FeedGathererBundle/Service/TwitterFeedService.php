@@ -58,6 +58,10 @@ class TwitterFeedService implements FeedService
 			$numberOfItems = count($feedEntries);
 			$this->saveItems($feedEntries);
 		}
+		else
+		{
+			$this->logger->err("Something went wrong in the twitter communication ($code): $response");
+		}
 
 		return $numberOfItems;
 	}
@@ -82,16 +86,6 @@ class TwitterFeedService implements FeedService
 	}
 
 	/**
-	 * @return \tmhOAuth
-	 */
-	protected function getTwitter()
-	{
-		$twitter = $this->twitter;
-		$twitter->load(self::$config);
-		return $twitter;
-	}
-
-	/**
 	 * Process all twitter entries by checking them for links.
 	 *
 	 * @param array $items
@@ -102,15 +96,17 @@ class TwitterFeedService implements FeedService
 	protected function processItems($items, TwitterUser $twitterUser, Feed $feed, \DateTime $lastUpdateTime)
 	{
 		$feedEntries = array();
+		$blacklistUsernames = $twitterUser->getBlacklistUsernames();
 
 		foreach($items as $item)
 		{
 			// TODO: ADD used link check
 
-			// whitelist/blacklist user check
 			$username = $item['user']['screen_name'];
 			$createdAt = $item['created_at'];
-			if ($this->isUserOnBlacklist($twitterUser->getBlacklistUsernames(), $username))
+
+			// whitelist/blacklist user check
+			if ($this->isUserOnBlacklist($blacklistUsernames, strtolower($username)))
 			{
 				$this->logger->info("Ignored a tweet from $username from $createdAt");
 				continue;
@@ -161,8 +157,8 @@ class TwitterFeedService implements FeedService
 	/**
 	 * Return whether or not if the given username exists in the array of blacklisted usernames.
 	 *
-	 * @param $blacklist
-	 * @param $username
+	 * @param array $blacklist
+	 * @param string $username
 	 * @return bool
 	 */
 	protected function isUserOnBlacklist($blacklist, $username)
@@ -187,6 +183,16 @@ class TwitterFeedService implements FeedService
 	public function setTwitter($twitter)
 	{
 		$this->twitter = $twitter;
+	}
+
+	/**
+	 * @return \tmhOAuth
+	 */
+	protected function getTwitter()
+	{
+		$twitter = $this->twitter;
+		$twitter->load(self::$config);
+		return $twitter;
 	}
 
 	/**

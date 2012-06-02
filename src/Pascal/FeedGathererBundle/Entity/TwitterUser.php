@@ -163,6 +163,7 @@ class TwitterUser
 		if (!empty($this->blacklistUsernames))
 			$usernames = explode(',', $this->blacklistUsernames);
 
+		$usernames = array_map('strtolower', $usernames);
 		return $usernames;
 	}
 }
