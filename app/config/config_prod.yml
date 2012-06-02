@@ -39,4 +39,3 @@ monolog:
             to_email: pascal.de.vink@gmail.com
             subject: RssReader: An error occured
             level: error
-            
