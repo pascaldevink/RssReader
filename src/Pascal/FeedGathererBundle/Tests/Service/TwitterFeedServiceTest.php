@@ -36,6 +36,7 @@ class TwitterFeedServiceTest extends \PHPUnit_Framework_TestCase
 		);
 		$item2 = array(
 			'user' => array('name' => 'Jan Janssen', 'screen_name' => 'janjanssen'),
+			'created_at' => 'Thu Oct 14 22:20:15 +0000 2010',
 		);
 		$items[] = $item1;
 		$items[] = $item2;
