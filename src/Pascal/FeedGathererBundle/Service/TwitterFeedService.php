@@ -23,24 +23,13 @@ class TwitterFeedService implements FeedService
 	 */
 	protected $twitter;
 
+	/**
+	 * @var \Symfony\Bridge\Monolog\Logger
+	 */
+	protected $logger;
+
 	public function __construct()
 	{
-	}
-
-	/**
-	 * @param \Symfony\Bundle\DoctrineBundle\Registry $doctrine
-	 */
-	public function setEntityManager(\Symfony\Bundle\DoctrineBundle\Registry $doctrine)
-	{
-		$this->entityManager = $doctrine->getEntityManager();
-	}
-
-	/**
-	 * @param \tmhOAuth $twitter
-	 */
-	public function setTwitter($twitter)
-	{
-		$this->twitter = $twitter;
 	}
 
 	public function getServiceType()
@@ -116,13 +105,16 @@ class TwitterFeedService implements FeedService
 
 		foreach($items as $item)
 		{
-			// TODO: Add time check
 			// TODO: ADD used link check
 
 			// whitelist/blacklist user check
 			$username = $item['user']['screen_name'];
+			$createdAt = $item['created_at'];
 			if ($this->isUserOnBlacklist($twitterUser->getBlacklistUsernames(), $username))
+			{
+				$this->logger->info("Ignored a tweet from $username from $createdAt");
 				continue;
+			}
 
 			$urls = $item['entities']['urls'];
 			if (empty($urls))
@@ -130,8 +122,10 @@ class TwitterFeedService implements FeedService
 
 			$author = $item['user']['name'];
 			$text = $item['text'];
-			$createdAt = $item['created_at'];
 			$dateTime = new \DateTime($createdAt);
+
+//			if ($dateTime < $lastUpdateTime)
+//				continue;
 
 			foreach($urls as $url)
 			{
@@ -177,5 +171,29 @@ class TwitterFeedService implements FeedService
 			return false;
 
 		return in_array($username, $blacklist);
+	}
+
+	/**
+	 * @param \Symfony\Bundle\DoctrineBundle\Registry $doctrine
+	 */
+	public function setEntityManager(\Symfony\Bundle\DoctrineBundle\Registry $doctrine)
+	{
+		$this->entityManager = $doctrine->getEntityManager();
+	}
+
+	/**
+	 * @param \tmhOAuth $twitter
+	 */
+	public function setTwitter($twitter)
+	{
+		$this->twitter = $twitter;
+	}
+
+	/**
+	 * @param \Symfony\Bridge\Monolog\Logger $logger
+	 */
+	public function setLogger(\Symfony\Bridge\Monolog\Logger $logger)
+	{
+		$this->logger = $logger;
 	}
 }

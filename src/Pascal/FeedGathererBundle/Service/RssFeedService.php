@@ -90,6 +90,8 @@ class RssFeedService implements FeedService
 
 		foreach ($items as $item)
 		{
+			// TODO: ADD used link check
+
 			$dateTime = new \DateTime($item->get_date());
 
 			if ($dateTime < $lastUpdateTime)
